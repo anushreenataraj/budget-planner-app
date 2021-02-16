@@ -24,10 +24,12 @@ def home():
     return render_template('home.html', posts=posts)
 
 @app.route("/revenue")
+@login_required
 def revenue():
     return render_template('revenue.html', title='Revenue')
 
 @app.route("/expense")
+@login_required
 def expense():
     return render_template('expense.html', title='Expense')
 
