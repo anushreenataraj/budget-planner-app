@@ -25,17 +25,17 @@ def home():
 
 @app.route("/operations")
 @login_required
-def revenue():
+def operations():
     return render_template('operations.html', title='Operations')
 
 @app.route("/marketing")
 @login_required
-def expense():
+def marketing():
     return render_template('marketing.html', title='Marketing')
 
 @app.route("/sales")
 @login_required
-def expense():
+def sales():
     return render_template('sales.html', title='Sales')
 
 @app.route("/register", methods = ["POST", "GET"])
