@@ -23,15 +23,20 @@ posts =[
 def home():
     return render_template('home.html', posts=posts)
 
-@app.route("/revenue")
+@app.route("/operations")
 @login_required
 def revenue():
-    return render_template('revenue.html', title='Revenue')
+    return render_template('operations.html', title='Operations')
 
-@app.route("/expense")
+@app.route("/marketing")
 @login_required
 def expense():
-    return render_template('expense.html', title='Expense')
+    return render_template('marketing.html', title='Marketing')
+
+@app.route("/sales")
+@login_required
+def expense():
+    return render_template('sales.html', title='Sales')
 
 @app.route("/register", methods = ["POST", "GET"])
 def register():
