@@ -18,6 +18,7 @@ posts =[
         "date_posted": "12 January, 2021"
     }
 ]
+page_access = 0
 @app.route("/")
 @app.route("/home")
 def home():
@@ -26,17 +27,35 @@ def home():
 @app.route("/operations")
 @login_required
 def operations():
-    return render_template('operations.html', title='Operations')
+    global page_access
+    if page_access == 1:
+        return render_template('operations.html', title='Operations')
+    elif page_access == 2:
+        return render_template('operations.html', title='Operations')
+    else:
+        return render_template('no_access_page.html')
 
 @app.route("/marketing")
 @login_required
 def marketing():
-    return render_template('marketing.html', title='Marketing')
+    global page_access
+    if page_access == 1:
+        return render_template('marketing.html', title='Marketing')
+    elif page_access == 3:
+        return render_template('marketing.html', title='Marketing')
+    else:
+        return render_template('no_access_page.html')
 
 @app.route("/sales")
 @login_required
 def sales():
-    return render_template('sales.html', title='Sales')
+    global page_access
+    if page_access == 1:
+        return render_template('sales.html', title='Sales')
+    elif page_access == 4:
+        return render_template('sales.html', title='Sales')
+    else:
+        return render_template('no_access_page.html')
 
 @app.route("/register", methods = ["POST", "GET"])
 def register():
@@ -54,6 +73,7 @@ def register():
 
 @app.route("/login", methods = ["POST", "GET"])
 def login():
+    global page_access
     if current_user.is_authenticated:
         return redirect(url_for('home'))
     form = LoginForm()
@@ -61,8 +81,16 @@ def login():
         user = User.query.filter_by(email=form.email.data).first()
         if user and bcrypt.check_password_hash(user.password, form.password.data):
             login_user(user, remember=form.remember.data)
+            if user.email == 'admin@gmail.com':
+                page_access = 1
+            elif user.email == 'operations@gmail.com':
+                page_access = 2
+            elif user.email == 'marketing@gmail.com':
+                page_access = 3
+            elif user.email == 'sales@gmail.com':
+                page_access = 4
             next_page = request.args.get('next')
-            return redirect(next_page) if next_page else redirect(url_for('home'))
+            return redirect(next_page) if next_page else render_template('home.html')
         else:
             flash('Login Unsucessful. Please check email and password', 'danger')
     return render_template('login.html', title='Login', form=form)
