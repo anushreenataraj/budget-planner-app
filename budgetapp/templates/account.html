@@ -3,7 +3,7 @@
     <div class="content-section">
         <div class="media">
             <div class="media-body">
-                <h4>Hello, {{ current_user.username }}!</h4>
+                <h4>Hello, {{ current_user.username }}!<span class="badge rounded-pill bg-warning text-dark">{{ user_department }}</span></h4>
             </div>
         </div>
         <div class="content-section">
@@ -45,4 +45,13 @@
             </form>
         </div>
     </div>
+    {% if user_access == 1 %}
+        <hr class="rounded" style="border-top: 10px solid #bbb; border-radius: 5px;">
+        <h1>You are logged in as <b>Admin</b>!</h1>
+        <p>So, you will be able to delete and add users to the database!</p>
+        <a type="button" class="btn btn-outline-warning" href="{{ url_for('register') }}">Add User</a>
+        <a type="button" class="btn btn-outline-success" href="{{ url_for('check_user') }}">Check User</a>
+        <a type="button" class="btn btn-outline-danger" href="{{ url_for('delete_account') }}">Delete User</a>
+        <hr class="rounded" style="border-top: 10px solid #bbb; border-radius: 5px;">
+    {% endif %}
 {% endblock content%}
