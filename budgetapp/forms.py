@@ -1,8 +1,10 @@
 from flask_wtf import FlaskForm
 from flask_login import current_user
-from wtforms import StringField, PasswordField, SubmitField, BooleanField, SelectField
+from flask_wtf.file import FileField, FileAllowed
+from wtforms import StringField, PasswordField, SubmitField, BooleanField, SelectField, TextAreaField, FileField
 from wtforms.validators import DataRequired, Length, EqualTo, Email, ValidationError
-from budgetapp.models import User
+from budgetapp.models import User, Post
+from flask_login import login_user, current_user, logout_user, login_required
 
 class RegistrationForm(FlaskForm):
     username = StringField('Username', validators=[DataRequired(), Length(min=2, max=20)])
@@ -58,3 +60,12 @@ class DeleteAccountForm(FlaskForm):
 class CheckAccountForm(FlaskForm):
     email = StringField('Email', validators=[DataRequired(), Email()])
     submit = SubmitField('Check')
+
+class PostForm(FlaskForm):
+    title = StringField('Title', validators=[DataRequired()])
+    content = TextAreaField('Content', validators=[DataRequired()])
+    submit = SubmitField('Post')
+
+class DeletePostForm(FlaskForm):
+    title = StringField('Title', validators=[DataRequired()])
+    submit = SubmitField('Delete')

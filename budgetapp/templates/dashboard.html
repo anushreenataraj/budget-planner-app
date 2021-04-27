@@ -1,0 +1,38 @@
+{% extends "layouts.html" %}
+{% block content %}
+<head>
+    <meta charset="UTF-8">
+    <title>My Dashboard</title>
+</head>
+<body>
+    <div class="col-md-10">
+            <div class="content-section">
+              <h4 style="font-family: 'ABeeZee', sans-serif;"><strong>Username: </strong>{{ user.username }}</h4>
+                <h4 style="font-family: 'ABeeZee', sans-serif;"><strong>Email: </strong>{{ user.email }}</h4>
+                <h4 style="font-family: 'ABeeZee', sans-serif;"><strong>Department/Type: </strong><span class="badge rounded-pill bg-warning text-dark">{{department }}</span></h4>
+            </div>
+</div>
+{% if page_access == 1 %}
+    <div class="col-md-8">
+                <div class="content-section">
+                    <h3 style="font-family: 'ABeeZee', sans-serif;">Manage Users</h3>
+                    <div class="btn-group" role="group" aria-label="Basic example">
+                <a type="button" class="btn btn-outline-warning" href="{{ url_for('register') }}"><i class="fi-br-user-add"></i></a>
+                <a type="button" class="btn btn-outline-success" href="{{ url_for('check_user') }}"><i class="fi-br-user-time"></i></a>
+                <a type="button" class="btn btn-outline-danger" href="{{ url_for('delete_account') }}"><i class="fi-br-user-delete"></i></a>
+            </div>
+                </div>
+    </div>
+{% endif %}
+
+<div class="col-md-8">
+                <div class="content-section">
+                    <h4 style="font-family: 'ABeeZee', sans-serif;"><strong>Posts</strong></h4>
+                    <div class="btn-group" role="group" aria-label="Basic example">
+                <a type="button" class="btn btn-outline-warning" href="{{ url_for('create_new_post') }}"><i class="fi-br-folder-add"></i></a>
+                <a type="button" class="btn btn-outline-danger" href="{{ url_for('delete_post') }}"><i class="fi-br-trash"></i></a>
+            </div>
+                    </div>
+                </div>
+</body>
+{% endblock content %}

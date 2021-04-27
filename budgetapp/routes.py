@@ -1,41 +1,36 @@
 from flask import render_template, url_for, flash, redirect, request
-from budgetapp.forms import RegistrationForm, LoginForm, UpdateAccountForm, DeleteAccountForm, CheckAccountForm
+from budgetapp.forms import RegistrationForm, LoginForm, UpdateAccountForm, DeleteAccountForm, CheckAccountForm, PostForm, DeletePostForm
 from budgetapp.models import User, Post
 from budgetapp import app, db, bcrypt
 from flask_login import login_user, current_user, logout_user, login_required
 import pandas as pd
-import numpy as np
+import io
+import requests
 
-posts =[
-    {
-        "author": "admin",
-        "title": "Budget Update",
-        "content": "FY21 quarterly earnings are likely to be 30 percent higher than the target.",
-        "date_posted": "24 January, 2021"
-    },
-    {
-        "author": "admin",
-        "title": "December 2020 quarter",
-        "content": "Company's deal pipeline continues to be healthy and strong as the profits jumped by 65.7 percent.",
-        "date_posted": "12 January, 2021"
-    }
-]
 
 
 page_access = 0
+
+@app.errorhandler(404)
+def page_not_found(e):
+    # note that we set the 404 status explicitly
+    return render_template('404.html'), 404
+
 @app.route("/home")
 @login_required
 def home():
+    posts = Post.query.filter_by(department='Admin')
     return render_template('home.html', posts=posts)
 
 @app.route("/operations")
 @login_required
 def operations():
     global page_access
+    posts = Post.query.filter_by(department='Operations')
     if page_access == 1:
-        return render_template('operations.html', title='Operations')
+        return render_template('operations.html', title='Operations', posts=posts)
     elif page_access == 2:
-        return render_template('operations.html', title='Operations')
+        return render_template('operations.html', title='Operations', posts=posts)
     else:
         return render_template('no_access_page.html')
 
@@ -43,10 +38,11 @@ def operations():
 @login_required
 def marketing():
     global page_access
+    posts = Post.query.filter_by(department='Marketing')
     if page_access == 1:
-        return render_template('marketing.html', title='Marketing')
+        return render_template('marketing.html', title='Marketing', posts=posts)
     elif page_access == 3:
-        return render_template('marketing.html', title='Marketing')
+        return render_template('marketing.html', title='Marketing', posts=posts)
     else:
         return render_template('no_access_page.html')
 
@@ -54,10 +50,11 @@ def marketing():
 @login_required
 def sales():
     global page_access
+    posts = Post.query.filter_by(department='Sales')
     if page_access == 1:
-        return render_template('sales.html', title='Sales')
+        return render_template('sales.html', title='Sales', posts=posts)
     elif page_access == 4:
-        return render_template('sales.html', title='Sales')
+        return render_template('sales.html', title='Sales', posts=posts)
     else:
         return render_template('no_access_page.html')
 
@@ -91,6 +88,8 @@ def delete_account():
                 flash('Account Has Been Deleted Successfully', 'success')
                 return redirect(url_for('home'))
         return render_template('delete_user.html', form=form)
+    else:
+        return render_template('no_access_page.html')
 
 @app.route("/", methods = ["POST", "GET"])
 def login():
@@ -146,7 +145,57 @@ def check_user():
         if form.validate_on_submit():
             user = User.query.filter_by(email=form.email.data).first()
             if user:
-                return render_template('check_user.html', user=user, form=form)
+                print(User.query.all())
+                return render_template('check_user.html', user=user, form=form, users=User.query.all())
             else:
-                flash('account not exists', 'warning')
-        return render_template('check_user.html', form=form)
+                print(User.query.all())
+                flash('No Account found', 'warning')
+        return render_template('check_user.html', form=form, users=User.query.all())
+    else:
+        return render_template('no_access_page.html')
+
+@app.route('/Dashboard', methods=['GET', 'POST'])
+@login_required
+def dashboard():
+    posts = Post.query.all()
+    departments = ['', 'Admin', 'Operations', 'Marketing', 'Sales'][page_access]
+    return render_template('dashboard.html', department=departments, user=current_user, page_access=page_access, posts=posts)
+
+@app.route('/new_post', methods=['POST', 'GET'])
+@login_required
+def create_new_post():
+    form = PostForm()
+    if form.validate_on_submit():
+        departments = ['', 'Admin', 'Operations', 'Marketing', 'Sales'][page_access]
+        post = Post.query.filter_by(title=form.title.data).first()
+        if post:
+            flash('Post with Same Title Already exists', 'warning')
+        else:
+            post = Post(title=form.title.data, content=form.content.data, author=current_user, department=departments)
+            flash('Post Created Successfully', 'success')
+            db.session.add(post)
+            db.session.commit()
+    return render_template('new_post.html', form=form)
+
+@app.route('/delete_post', methods=['POST', 'GET'])
+@login_required
+def delete_post():
+    form = DeletePostForm()
+    departments = ['', 'Admin', 'Operations', 'Marketing', 'Sales'][page_access]
+    if form.validate_on_submit():
+        post = Post.query.filter_by(title=form.title.data).first()
+        if post:
+            if post.author.username == current_user:
+                flash('Post deleted successfully', 'success')
+                db.session.delete(post)
+                db.session.commit()
+            elif post.department == departments:
+                flash('Post deleted successfully', 'success')
+                db.session.delete(post)
+                db.session.commit()
+            else:
+                flash('You Cannot Delete This Post', 'warning')
+        else:
+            flash('Post not found', 'warning')
+    return render_template('delete_post.html', form=form)
+

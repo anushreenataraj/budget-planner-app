@@ -21,8 +21,18 @@ class Post(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(100), nullable=False)
     date_posted = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
+    department = db.Column(db.Text, nullable=False)
     content = db.Column(db.Text, nullable=False)
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    user_id = db.Column(db.Text, db.ForeignKey('user.id'), nullable=False)
 
     def __repr__(self):
-        return f"Post('{self.title}', '{self.date_posted}')"
+        return f"Post('{self.title}', '{self.date_posted}', {self.department})"
+
+# class Files(db.Model):
+#     id = db.Column(db.Integer, primary_key=True)
+#     title = db.Column(db.String(100), nullable=False)
+#     file = db.Column(db.Text, nullable=False)
+#     department = db.Column(db.String(20), nullable=False)
+#     user = db.Column(db.Text, db.ForeignKey('user.id'), nullable=False)
+#     def __repr__(self):
+#         return f"Post('{self.title}', '{self.file}', '{self.user}', '{self.department}')"

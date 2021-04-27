@@ -27,12 +27,14 @@
     </div>
     <div class="border-top pt-3">
     </div>
-    <hr class="rounded" style="border-top: 10px solid #bbb; border-radius: 5px;">
     {% if user %}
-        <h1>Account Info</h1>
-        <h2>Username: <small>{{ user.username }}</small></h2>
-        <h2>Email: <small>{{ user.email }}</small></h2>
-        <h2>Department: <span class="badge rounded-pill bg-warning text-dark">{{ user.department }}</span></h2>
-        <hr class="rounded" style="border-top: 10px solid #bbb; border-radius: 5px;">
+        <div class="col-md-8">
+            <div class="content-section">
+        <h3 style="font-family: 'ABeeZee', sans-serif;">Account Info</h3>
+        <h4 style="font-family: 'ABeeZee', sans-serif;">Username: <small>{{ user.username }}</small></h4>
+        <h4 style="font-family: 'ABeeZee', sans-serif;">Email: <small>{{ user.email }}</small></h4>
+        <h4 style="font-family: 'ABeeZee', sans-serif;">Department: <span class="badge rounded-pill bg-warning text-dark">{{ user.department }}</span></h4>
+                    </div>
+    </div>
     {% endif %}
 {% endblock content%}
