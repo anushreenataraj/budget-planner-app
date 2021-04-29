@@ -4,7 +4,7 @@ from budgetapp.models import User, Post
 from budgetapp import app, db, bcrypt
 from flask_login import login_user, current_user, logout_user, login_required
 import pandas as pd
-import io
+import io,os,csv
 import requests
 
 
@@ -198,4 +198,22 @@ def delete_post():
         else:
             flash('Post not found', 'warning')
     return render_template('delete_post.html', form=form)
-
+def find(l,k):
+    for i in l:
+        if i == k:
+            return 1
+    return 0
+@app.route('/data', methods=['POST', 'GET'])
+@login_required
+def data():
+    if request.method=="POST":
+        f = request.form['csvfile']
+        path= r'C:\Users\sai\Desktop\bapp\budget-planner-app\budgetapp'
+        data=[]
+        with open(os.path.join(path, f)) as file:
+            csvfile=csv.reader(file)
+            k=''
+            for row in csvfile:
+                if find(row,k)==0:
+                    data.append(row)
+        return render_template("sales.html",data=data)
