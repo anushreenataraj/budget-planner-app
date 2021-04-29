@@ -11,5 +11,21 @@
             <p class="article-content" style="font-family: 'ABeeZee', sans-serif;">{{ post.content }}</p>
           </div>
         </article>
-    {% endfor %}
+        {% endfor %}
+        <form class="" action="data" method="POST">
+          <input type="file" name="csvfile" value="">
+          <input type="submit" name="" value="Submit">
+        </form>
+        {% if data %}
+          {% for i in data%}
+            {% for j in range(1,4) %}
+              {% if j == 1 %}
+                <h4>{{ i[j] }}</h4>
+              {% else %}
+                <h6>{{ i[j] }}</h6>
+              {% endif %}
+            {% endfor %}
+            <br>
+          {% endfor %}
+        {% endif  %}
     {% endblock content%}
