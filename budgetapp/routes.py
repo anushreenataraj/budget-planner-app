@@ -6,7 +6,7 @@ from flask_login import login_user, current_user, logout_user, login_required
 import pandas as pd
 import io,os,csv
 import requests
-
+from werkzeug.utils import secure_filename
 
 
 page_access = 0
@@ -203,14 +203,18 @@ def find(l,k):
         if i == k:
             return 1
     return 0
-@app.route('/data', methods=['POST', 'GET'])
+@app.route('/data', methods=['POST'])
 @login_required
 def data():
     if request.method=="POST":
-        f = request.form['csvfile']
-        path= r'C:\Users\sai\Desktop\bapp\budget-planner-app\budgetapp'
+        f = request.files['csvfile']
+        if f.filename == '':
+            return redirect(request.url)
+        elif f:
+            filename = secure_filename(f.filename)
+            f.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
         data=[]
-        with open(os.path.join(path, f)) as file:
+        with open(os.path.join(app.config['UPLOAD_FOLDER'], filename)) as file:
             csvfile=csv.reader(file)
             k=''
             for row in csvfile:
