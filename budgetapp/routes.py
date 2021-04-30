@@ -33,6 +33,7 @@ def operations():
         return render_template('operations.html', title='Operations', posts=posts)
     else:
         return render_template('no_access_page.html')
+    
 
 @app.route("/marketing")
 @login_required
@@ -199,17 +200,21 @@ def delete_post():
             flash('Post not found', 'warning')
     return render_template('delete_post.html', form=form)
 def find(l,k):
+    count=0
     for i in l:
         if i == k:
-            return 1
+            count=count+1
+    if count>2:
+        return 1
     return 0
 @app.route('/data', methods=['POST'])
 @login_required
 def data():
+    posts = Post.query.filter_by(department='Operations')
     if request.method=="POST":
         f = request.files['csvfile']
         if f.filename == '':
-            return redirect(request.url)
+            return redirect(url_for('operations'))
         elif f:
             filename = secure_filename(f.filename)
             f.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
@@ -220,4 +225,4 @@ def data():
             for row in csvfile:
                 if find(row,k)==0:
                     data.append(row)
-        return render_template("sales.html",data=data)
+        return render_template("operations.html",data=data,posts=posts)
