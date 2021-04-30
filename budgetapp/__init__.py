@@ -6,6 +6,7 @@ from flask_login import LoginManager
 app = Flask(__name__)
 app.config['SECRET_KEY'] = '8eba05cf8f1242c3c05ca3318d8efd2e'
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///site.db'
+app.config['UPLOAD_FOLDER'] = r'C:\Users\sai\Desktop\bapp\budget-planner-app\budgetapp\upload'
 db = SQLAlchemy(app)
 bcrypt = Bcrypt(app)
 login_manager = LoginManager(app)

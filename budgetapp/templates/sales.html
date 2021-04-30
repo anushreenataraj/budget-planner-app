@@ -12,9 +12,9 @@
           </div>
         </article>
         {% endfor %}
-        <form class="" action="data" method="POST">
-          <input type="file" name="csvfile" value="">
-          <input type="submit" name="" value="Submit">
+        <form  action="data" method="POST" enctype="multipart/form-data">
+          <input  type="file" name="csvfile">
+          <input type="submit" value="Upload">
         </form>
         {% if data %}
           {% for i in data%}
