@@ -12,4 +12,20 @@
           </div>
         </article>
     {% endfor %}
+    <form  action="data" method="POST" enctype="multipart/form-data">
+          <input  type="file" name="csvfile">
+          <input type="submit" value="Upload">
+        </form>
+        {% if data %}
+          {% for i in data%}
+            {% for j in range(1,4) %}
+              {% if j == 1 %}
+                <h4>{{ i[j] }}</h4>
+              {% else %}
+                <h6>{{ i[j] }}</h6>
+              {% endif %}
+            {% endfor %}
+            <br>
+          {% endfor %}
+        {% endif  %}
     {% endblock content%}
