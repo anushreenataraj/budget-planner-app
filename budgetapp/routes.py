@@ -20,7 +20,7 @@ def page_not_found(e):
 @login_required
 def home():
     posts = Post.query.filter_by(department='Admin')
-    return render_template('home.html', posts=posts)
+    return render_template('home.html', posts=posts, active_h='active')
 
 @app.route("/operations")
 @login_required
@@ -28,11 +28,11 @@ def operations():
     global page_access
     posts = Post.query.filter_by(department='Operations')
     if page_access == 1:
-        return render_template('operations.html', title='Operations', posts=posts)
+        return render_template('operations.html', title='Operations', posts=posts, active_o='active')
     elif page_access == 2:
-        return render_template('operations.html', title='Operations', posts=posts)
+        return render_template('operations.html', title='Operations', posts=posts, active_o='active')
     else:
-        return render_template('no_access_page.html')
+        return render_template('no_access_page.html', active_o='active')
 
 @app.route("/marketing")
 @login_required
@@ -40,11 +40,11 @@ def marketing():
     global page_access
     posts = Post.query.filter_by(department='Marketing')
     if page_access == 1:
-        return render_template('marketing.html', title='Marketing', posts=posts)
+        return render_template('marketing.html', title='Marketing', posts=posts, active_m='active')
     elif page_access == 3:
-        return render_template('marketing.html', title='Marketing', posts=posts)
+        return render_template('marketing.html', title='Marketing', posts=posts, active_m='active')
     else:
-        return render_template('no_access_page.html')
+        return render_template('no_access_page.html', active_m='active')
 
 @app.route("/sales")
 @login_required
@@ -52,11 +52,11 @@ def sales():
     global page_access
     posts = Post.query.filter_by(department='Sales')
     if page_access == 1:
-        return render_template('sales.html', title='Sales', posts=posts)
+        return render_template('sales.html', title='Sales', posts=posts, active_s='active')
     elif page_access == 4:
-        return render_template('sales.html', title='Sales', posts=posts)
+        return render_template('sales.html', title='Sales', posts=posts, active_s='active')
     else:
-        return render_template('no_access_page.html')
+        return render_template('no_access_page.html',active_s='active')
 
 @app.route("/register", methods = ["POST", "GET"])
 @login_required
@@ -135,7 +135,7 @@ def account():
     elif request.method == 'GET':
         form.username.data = current_user.username
         form.email.data = current_user.email
-    return render_template('account.html', title='Account', form=form, user_access=page_access, user_department=departments)
+    return render_template('account.html', title='Account', form=form, user_access=page_access, user_department=departments, active_a='active')
 
 @app.route('/checkuser', methods=['GET', 'POST'])
 @login_required
@@ -159,7 +159,7 @@ def check_user():
 def dashboard():
     posts = Post.query.all()
     departments = ['', 'Admin', 'Operations', 'Marketing', 'Sales'][page_access]
-    return render_template('dashboard.html', department=departments, user=current_user, page_access=page_access, posts=posts)
+    return render_template('dashboard.html', department=departments, user=current_user, page_access=page_access, posts=posts, active_d='active')
 
 @app.route('/new_post', methods=['POST', 'GET'])
 @login_required
@@ -198,11 +198,15 @@ def delete_post():
         else:
             flash('Post not found', 'warning')
     return render_template('delete_post.html', form=form)
+
+
 def find(l,k):
     for i in l:
         if i == k:
             return 1
     return 0
+
+
 @app.route('/data', methods=['POST', 'GET'])
 @login_required
 def data():
