@@ -235,10 +235,5 @@ def data():
             for row in csvfile:
                 if find(row,k)==0:
                     data.append(row)
-<<<<<<< HEAD
         return render_template("sales.html",data=data)
 
-
-=======
-        return render_template("operations.html",data=data,posts=posts)
->>>>>>> 24caeb2feac89361a4ad4c3258e27db492923501
