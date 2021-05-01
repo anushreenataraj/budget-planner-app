@@ -33,12 +33,7 @@ def operations():
     elif page_access == 2:
         return render_template('operations.html', title='Operations', posts=posts, active_o='active')
     else:
-<<<<<<< HEAD
         return render_template('no_access_page.html', active_o='active')
-=======
-        return render_template('no_access_page.html')
-    
->>>>>>> 24caeb2feac89361a4ad4c3258e27db492923501
 
 @app.route("/marketing")
 @login_required
