@@ -16,7 +16,12 @@
 <link rel='stylesheet' href='https://cdn-uicons.flaticon.com/uicons-regular-rounded/css/uicons-regular-rounded.css'>
 <link rel='stylesheet' href='https://cdn-uicons.flaticon.com/uicons-bold-rounded/css/uicons-bold-rounded.css'>
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='main.css') }}?version=51">
-
+    <!-- Import D3 Scale Chromatic via CDN -->
+    <script src="https://d3js.org/d3-color.v1.min.js"></script>
+    <script src="https://d3js.org/d3-interpolate.v1.min.js"></script>
+    <script src="https://d3js.org/d3-scale-chromatic.v1.min.js"></script>
+    <!-- Import D3 Scale Chromatic via CDN -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.2.0/chart.min.js"></script>
 </head>
 <body>
     <header class="site-header">
@@ -31,11 +36,11 @@
             <div class="collapse navbar-collapse" id="navbarToggle">
               <div class="navbar-nav mr-auto">
                 {% if current_user.is_authenticated %}
-                    <a class="nav-item nav-link" href="{{ url_for('dashboard') }}">MY DASHBOARD</a>
-                    <a class="nav-item nav-link" href="{{ url_for('home') }}">HOME</a>
-                      <a class="nav-item nav-link" href="{{ url_for('operations') }}">OPERATIONS</a>
-                     <a class="nav-item nav-link" href="{{ url_for('marketing') }}">MARKETING</a>
-                    <a class="nav-item nav-link" href="{{ url_for('sales') }}">SALES</a>
+                    <a class="nav-item nav-link {{ active_d }}" href="{{ url_for('dashboard') }}">MY DASHBOARD</a>
+                    <a class="nav-item nav-link {{ active_h }}" href="{{ url_for('home') }}">HOME</a>
+                    <a class="nav-item nav-link {{ active_o }}" href="{{ url_for('operations') }}">OPERATIONS</a>
+                    <a class="nav-item nav-link {{ active_m }}" href="{{ url_for('marketing') }}">MARKETING</a>
+                    <a class="nav-item nav-link {{ active_s }}" href="{{ url_for('sales') }}">SALES</a>
                 {% endif %}
               </div>
               <!-- Navbar Right Side -->
