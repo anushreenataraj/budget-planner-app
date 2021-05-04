@@ -12,4 +12,100 @@
           </div>
         </article>
         {% endfor %}
+        <form  action="sales" method="POST" enctype="multipart/form-data">
+          <input  type="file" name="csvfile">
+          <input type="submit" value="Upload">
+        </form>
+      {% if exp %}
+    <div class="pie"><canvas id="myChart_s"></canvas></div>
+        <script>
+          var j='{{labels}}'
+          var lab= j.split(',')
+          function calculatePoint(i, intervalSize, colorRangeInfo) {
+            var { colorStart, colorEnd, useEndAsStart } = colorRangeInfo;
+            return (useEndAsStart
+              ? (colorEnd - (i * intervalSize)): (colorStart + (i * intervalSize)));
+          }
+          function interpolateColors(dataLength,colorRangeInfo) {
+            var { colorStart, colorEnd } = colorRangeInfo;
+            var colorRange = colorEnd - colorStart;
+            var intervalSize = colorRange / dataLength;
+            var i, colorPoint;
+            var colorArray = [];
+            for (i = 0; i < dataLength; i++) {
+            colorPoint = calculatePoint(i, intervalSize, colorRangeInfo);
+            colorArray.push(d3.interpolateSpectral(colorPoint));
+            }
+            return colorArray;
+          }  
+          const colorRangeInfo = {
+            colorStart: 0,
+            colorEnd: 1,
+            useEndAsStart: false,
+          }
+          var myData={{exp}}
+          var COLORS = interpolateColors(myData.length,colorRangeInfo);
+          const data = {
+            labels: lab,
+            datasets: [{
+              label: 'My First Dataset',
+              data: {{exp}},
+              backgroundColor: COLORS,
+              hoverBackgroundColor: COLORS,
+              hoverOffset: 4
+            }]
+          };
+          const config = {
+            type: 'pie',
+            data: data,
+          };
+          var myChart = new Chart(
+            document.getElementById('myChart_s'),
+            config
+          );
+        </script>
+        <div class="bar">
+        <canvas id="barchart_s"></canvas>
+        </div>
+        <script>
+          function clr(l,len){
+            var a=[];
+            for(var i=0;i<len;i++){
+              a.push(l)
+            }
+            return a
+          }
+          const data1 = {
+            labels: lab,
+            datasets: [{
+              label: 'Expenses',
+              data: {{exp}},
+              backgroundColor: clr('rgba(255, 99, 132, 0.2)',{{exp}}.length),
+              borderColor: clr('rgb(255, 99, 132)',{{exp}}.length),
+              borderWidth: 1
+            },{
+              label: 'Revenue',
+              data: {{rev}},
+              backgroundColor: clr('rgba(54, 162, 235, 0.2)',{{rev}}.length),
+              borderColor: clr('rgb(54, 162, 235)',{{rev}}.length),
+              borderWidth: 1
+            }]
+          };
+          const config1 = {
+            type: 'bar',
+            data: data1,
+            options: {
+              scales: {
+                x: {
+                  stacked: true
+                },
+                y: {
+                  stacked: true
+                }
+              }
+            }
+          };
+          var myChart = new Chart(document.getElementById('barchart_s'),config1);
+        </script>
+    {% endif %}
     {% endblock content%}
