@@ -1,12 +1,13 @@
 from flask import render_template, url_for, flash, redirect, request
 from budgetapp.forms import RegistrationForm, LoginForm, UpdateAccountForm, DeleteAccountForm, CheckAccountForm, PostForm, DeletePostForm
 from budgetapp.models import User, Post
-from budgetapp import app, db, bcrypt
+from budgetapp import app, db, bcrypt, dropzone
 from flask_login import login_user, current_user, logout_user, login_required
 import pandas as pd
 import io,os,csv
 import requests
 from werkzeug.utils import secure_filename
+from flask_dropzone import Dropzone
 
 page_access = 0
 def find(l,k):
@@ -29,13 +30,20 @@ def page_not_found(e):
 @login_required
 def home():
     posts = Post.query.filter_by(department='Admin')
+<<<<<<< HEAD
     return render_template('home.html', posts=posts,active_h='active')
 file_o=file_m=file_s=''
 @app.route("/operations", methods=['POST','GET'])
+=======
+    return render_template('home.html', posts=posts, active_h='active')
+
+@app.route("/operations")
+>>>>>>> 50bbbdac634b2434b25a7bd9a85b6c8d662d6d34
 @login_required
 def operations():
     global page_access,file_o
     posts = Post.query.filter_by(department='Operations')
+<<<<<<< HEAD
     data=[]
     expense=[]
     revenue=[]
@@ -78,6 +86,14 @@ def operations():
         return render_template('operations.html', title='Operations', posts=posts,active_o='active')
     else:
         return render_template('no_access_page.html',active_o='active')
+=======
+    if page_access == 1:
+        return render_template('operations.html', title='Operations', posts=posts, active_o='active')
+    elif page_access == 2:
+        return render_template('operations.html', title='Operations', posts=posts, active_o='active')
+    else:
+        return render_template('no_access_page.html', active_o='active')
+>>>>>>> 50bbbdac634b2434b25a7bd9a85b6c8d662d6d34
 
 @app.route("/marketing",methods = ["POST", "GET"])
 @login_required
@@ -88,6 +104,7 @@ def marketing():
     revenue=[]
     label=[]
     posts = Post.query.filter_by(department='Marketing')
+<<<<<<< HEAD
     if request.method=="POST":
         f = request.files['csvfile']
         if f.filename == '':
@@ -126,12 +143,21 @@ def marketing():
         return render_template('marketing.html', title='Marketing', posts=posts,active_m='active')
     else:
         return render_template('no_access_page.html',active_m='active')
+=======
+    if page_access == 1:
+        return render_template('marketing.html', title='Marketing', posts=posts, active_m='active')
+    elif page_access == 3:
+        return render_template('marketing.html', title='Marketing', posts=posts, active_m='active')
+    else:
+        return render_template('no_access_page.html', active_m='active')
+>>>>>>> 50bbbdac634b2434b25a7bd9a85b6c8d662d6d34
 
 @app.route("/sales",methods = ["POST", "GET"])
 @login_required
 def sales():
     global page_access,file_s
     posts = Post.query.filter_by(department='Sales')
+<<<<<<< HEAD
     data=[]
     expense=[]
     revenue=[]
@@ -172,6 +198,12 @@ def sales():
         return render_template("sales.html",posts=posts,labels=labels,rev=revenue,exp=expense,active_s='active')
     if page_access == 1 or page_access == 4:
         return render_template('sales.html', title='Sales', posts=posts,active_s='active')
+=======
+    if page_access == 1:
+        return render_template('sales.html', title='Sales', posts=posts, active_s='active')
+    elif page_access == 4:
+        return render_template('sales.html', title='Sales', posts=posts, active_s='active')
+>>>>>>> 50bbbdac634b2434b25a7bd9a85b6c8d662d6d34
     else:
         return render_template('no_access_page.html',active_s='active')
 
@@ -254,7 +286,7 @@ def account():
     elif request.method == 'GET':
         form.username.data = current_user.username
         form.email.data = current_user.email
-    return render_template('account.html', title='Account', form=form, user_access=page_access, user_department=departments)
+    return render_template('account.html', title='Account', form=form, user_access=page_access, user_department=departments, active_a='active')
 
 @app.route('/checkuser', methods=['GET', 'POST'])
 @login_required
@@ -278,7 +310,11 @@ def check_user():
 def dashboard():
     posts = Post.query.all()
     departments = ['', 'Admin', 'Operations', 'Marketing', 'Sales'][page_access]
+<<<<<<< HEAD
     return render_template('dashboard.html', department=departments, user=current_user, page_access=page_access, posts=posts,active_d='active')
+=======
+    return render_template('dashboard.html', department=departments, user=current_user, page_access=page_access, posts=posts, active_d='active')
+>>>>>>> 50bbbdac634b2434b25a7bd9a85b6c8d662d6d34
 
 @app.route('/new_post', methods=['POST', 'GET'])
 @login_required
@@ -319,4 +355,38 @@ def delete_post():
     return render_template('delete_post.html', form=form)
 
 
+<<<<<<< HEAD
         
+=======
+def find(l,k):
+    count=0
+    for i in l:
+        if i == k:
+            count=count+1
+    if count>2:
+        return 1
+    return 0
+
+
+
+@app.route('/data', methods=['POST'])
+@login_required
+def data():
+    posts = Post.query.filter_by(department='Operations')
+    if request.method=="POST":
+        f = request.files['csvfile']
+        if f.filename == '':
+            return redirect(url_for('operations'))
+        elif f:
+            filename = secure_filename(f.filename)
+            f.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+        data=[]
+        with open(os.path.join(app.config['UPLOAD_FOLDER'], filename)) as file:
+            csvfile=csv.reader(file)
+            k=''
+            for row in csvfile:
+                if find(row,k)==0:
+                    data.append(row)
+        return render_template("sales.html",data=data)
+
+>>>>>>> 50bbbdac634b2434b25a7bd9a85b6c8d662d6d34

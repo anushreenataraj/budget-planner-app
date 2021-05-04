@@ -15,7 +15,7 @@ body {
   }
 
   .bg-steel {
-    background-color: #D44C5B;
+    background-image: linear-gradient(10deg, #f88f01, #d46000);
     border-style: solid;
     border-color: black;
   }
