@@ -38,20 +38,15 @@
                 {% if current_user.is_authenticated %}
                     <a class="nav-item nav-link {{ active_d }}" href="{{ url_for('dashboard') }}">MY DASHBOARD</a>
                     <a class="nav-item nav-link {{ active_h }}" href="{{ url_for('home') }}">HOME</a>
-<<<<<<< HEAD
                     <a class="nav-item nav-link {{ active_o }}" href="{{ url_for('operations') }}">OPERATIONS</a>
                     <a class="nav-item nav-link {{ active_m }}" href="{{ url_for('marketing') }}">MARKETING</a>
-=======
-                      <a class="nav-item nav-link {{ active_o }}" href="{{ url_for('operations') }}">OPERATIONS</a>
-                     <a class="nav-item nav-link {{ active_m }}" href="{{ url_for('marketing') }}">MARKETING</a>
->>>>>>> 50bbbdac634b2434b25a7bd9a85b6c8d662d6d34
                     <a class="nav-item nav-link {{ active_s }}" href="{{ url_for('sales') }}">SALES</a>
                 {% endif %}
               </div>
               <!-- Navbar Right Side -->
               <div class="navbar-nav">
                 {% if current_user.is_authenticated %}
-                  <a class="nav-item nav-link {{ active_a }}" href="{{ url_for('account') }}"><i class="fi-br-portrait" data-toggle="tooltip" data-placement="top" title="Account"></i></a>
+                  <a class="nav-item nav-link" href="{{ url_for('account') }}"><i class="fi-br-portrait" data-toggle="tooltip" data-placement="top" title="Account"></i></a>
                   <a class="nav-item nav-link" href="{{ url_for('logout') }}"><i class="fi-br-sign-out" data-toggle="tooltip" data-placement="top" title="Logout"></i></a>
                 {% endif %}
               </div>
