@@ -7,18 +7,76 @@ import pandas as pd
 import io,os,csv
 import requests
 from werkzeug.utils import secure_filename
+from datetime import datetime
 
 page_access = 0
-def find(l,k):
-    count=0
-    for i in l:
-        if i == k:
-            count=count+1
-        if i.isalpha():
-            count=count+1
-    if count>1:
-        return 1
-    return 0
+def avg(list):
+    total=0
+    for i in list:
+        total=total+i
+    return (total/len(list))
+def total(list):
+    tot=0
+    for i in list:
+        tot=tot+i
+    return (tot)
+def clean(filename):
+    data=[]
+    u=[]
+    with open(os.path.join(app.config['UPLOAD_FOLDER'], filename),'r') as file:
+        csvfile=csv.reader(file)
+        for row in csvfile:
+            data.append(row)
+        for i in data:
+            for j in i:
+                count=i.count('')
+                for k in range(count):
+                    i.remove('')
+        for i in data:
+            if len(i)>1:
+                u.append(i)
+                k=u.index(i)
+                u[k][0]=str(k+1)
+    with open(os.path.join(app.config['UPLOAD_FOLDER'], filename),'w',newline='') as file:
+        writer = csv.writer(file, escapechar='/', quoting=csv.QUOTE_NONE)
+        writer.writerows(u)
+@login_required
+def post_add(filename,dep):
+    global today
+    p= filename+"\n"
+    now=datetime.now()
+    dt=now.strftime(" %d-%b-%Y (%H:%M)")
+    t='Monthly '+dep+' Details'+dt
+    d=dict()
+    u=[]
+    count=0;
+    clean(filename)
+    df = pd.read_csv(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+    for i in df.columns:
+        u.append(i)
+    print(u)
+
+    if "Category" not in u:
+        return -1
+    for i in df.columns:
+        if i.isnumeric() or i.upper() == "CATEGORY":
+            continue
+        else:
+            d['Total'+" "+i]= df[i].sum()
+            d['Avgerage'+" "+i]=round(df[i].mean(),2)
+            d['Maximum'+" "+i]= df[i].max()
+            d['Minimum'+" "+i]= df[i].min() 
+    for k in d:
+        p = p+str(k)+" : Rs"+str(d[k])+"\n" 
+    post = Post.query.filter_by(title=t).first()
+    if post:
+        print("Post already exist")
+        return 0
+    else:
+        post = Post(title=t, content=p, author=current_user, department=dep)
+        db.session.add(post)
+        db.session.commit() 
+        return 1        
 
 @app.errorhandler(404)
 def page_not_found(e):
@@ -28,54 +86,70 @@ def page_not_found(e):
 @app.route("/home")
 @login_required
 def home():
-    posts = Post.query.filter_by(department='Admin')
-    return render_template('home.html', posts=posts,active_h='active')
+    Dep=['Admin', 'Operations', 'Marketing', 'Sales']
+    file=dict()
+    for i in Dep:
+        file[i]=Post.query.filter_by(department=i)
+    return render_template('home.html',dep=file,active_h='active')
 file_o=file_m=file_s=''
 @app.route("/operations", methods=['POST','GET'])
 @login_required
 def operations():
+    posts= Post.query.filter_by(department='Operations')
     global page_access,file_o
-    posts = Post.query.filter_by(department='Operations')
     data=[]
     expense=[]
     revenue=[]
     label=[]
-    if request.method=="POST":
-        f = request.files['csvfile']
-        if f.filename == '':
-            file_o=''
-            return redirect(url_for('operations'))
-        elif f:
-            filename = secure_filename(f.filename)
-            file_o= filename
-            f.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-        with open(os.path.join(app.config['UPLOAD_FOLDER'], filename)) as file:
-            csvfile=csv.reader(file)
-            k=''
-            for row in csvfile:
-                if find(row,k)==0:
-                    data.append(row)
-        for i in data:
-            label.append(i[1])
-            expense.append(int(i[2]))
-            revenue.append(int(i[3]))
-        labels=','.join(label)
-        return render_template("operations.html",posts=posts,labels=labels,rev=revenue,exp=expense,active_o='active')
-    if file_o:
-        with open(os.path.join(app.config['UPLOAD_FOLDER'], file_o)) as file:
-            csvfile=csv.reader(file)
-            k=''
-            for row in csvfile:
-                if find(row,k)==0:
-                    data.append(row)
-        for i in data:
-            label.append(i[1])
-            expense.append(int(i[2]))
-            revenue.append(int(i[3]))
-        labels=','.join(label)
-        return render_template("operations.html",posts=posts,labels=labels,rev=revenue,exp=expense,active_o='active')
     if page_access == 1 or page_access == 2:
-        return render_template('operations.html', title='Operations', posts=posts,active_o='active')
+        if request.method=="POST":
+            f = request.files['csvfile']
+            if f.filename == '':
+                return redirect(url_for('operations'))
+            elif f:
+                filename = secure_filename(f.filename)
+                f.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+            clean(filename)
+            k=post_add(filename,'Operations')
+            if k==0:
+                flash('Post Already exist', 'warning')
+                return redirect(url_for('operations'))
+            elif k==-1:
+                flash('Add "Category" to Column names in the CSV file and Try again', 'danger')
+                return redirect(url_for('operations'))
+            else :
+                flash('Post added Sucessfully', 'success')
+                file_o = filename
+            with open(os.path.join(app.config['UPLOAD_FOLDER'], filename)) as file:
+                csvfile=csv.reader(file)
+                for row in csvfile:
+                    if row[1].isalpha():
+                        continue
+                    else:
+                        data.append(row)
+            for i in data:
+                label.append(i[1])
+                expense.append(int(i[2]))
+                revenue.append(int(i[3]))
+            labels=','.join(label)
+            posts= Post.query.filter_by(department='Operations')
+            return render_template("operations.html",posts=posts,labels=labels,rev=revenue,exp=expense,active_o='active')
+        elif file_o :
+            with open(os.path.join(app.config['UPLOAD_FOLDER'], file_o)) as file:
+                csvfile=csv.reader(file)
+                for row in csvfile:
+                    if row[1].isalpha():
+                        continue
+                    else:
+                        data.append(row)
+            for i in data:
+                label.append(i[1])
+                expense.append(int(i[2]))
+                revenue.append(int(i[3]))
+            labels=','.join(label)
+            return render_template("operations.html",posts=posts,labels=labels,rev=revenue,exp=expense,active_o='active')
+        else:
+            return render_template('operations.html', title='Operations', posts=posts,active_o='active')
     else:
         return render_template('no_access_page.html',active_o='active')
 
@@ -88,42 +162,56 @@ def marketing():
     revenue=[]
     label=[]
     posts = Post.query.filter_by(department='Marketing')
-    if request.method=="POST":
-        f = request.files['csvfile']
-        if f.filename == '':
-            file_m=''
-            return redirect(url_for('marketing'))
-        elif f:
-            filename = secure_filename(f.filename)
-            file_m= filename
-            f.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-        with open(os.path.join(app.config['UPLOAD_FOLDER'], filename)) as file:
-            csvfile=csv.reader(file)
-            k=''
-            for row in csvfile:
-                if find(row,k)==0:
-                    data.append(row)
-        for i in data:
-            label.append(i[1])
-            expense.append(int(i[2]))
-            revenue.append(int(i[3]))
-        labels=','.join(label)
-        return render_template("marketing.html",posts=posts,labels=labels,rev=revenue,exp=expense,active_m='active')
-    if file_m:
-        with open(os.path.join(app.config['UPLOAD_FOLDER'], file_m)) as file:
-            csvfile=csv.reader(file)
-            k=''
-            for row in csvfile:
-                if find(row,k)==0:
-                    data.append(row)
-        for i in data:
-            label.append(i[1])
-            expense.append(int(i[2]))
-            revenue.append(int(i[3]))
-        labels=','.join(label)
-        return render_template("marketing.html",posts=posts,labels=labels,rev=revenue,exp=expense,active_m='active')
     if page_access == 1 or page_access == 3:
-        return render_template('marketing.html', title='Marketing', posts=posts,active_m='active')
+        if request.method=="POST":
+            f = request.files['csvfile']
+            if f.filename == '':
+                return redirect(url_for('marketing'))
+            elif f:
+                filename = secure_filename(f.filename)
+                file_m= filename
+                f.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+            clean(filename)
+            k=post_add(filename,'Marketing')
+            if k==0:
+                flash('Post Already exist', 'warning')
+                return redirect(url_for('marketing'))
+            elif k==-1:
+                flash('Add "Category" to Column names in the CSV file and Try again', 'danger')
+                return redirect(url_for('marketing'))
+            else:
+                flash('Post added Sucessfully', 'success')
+                file_m = filename
+            with open(os.path.join(app.config['UPLOAD_FOLDER'], filename)) as file:
+                csvfile=csv.reader(file)
+                for row in csvfile:
+                    if row[1].isalpha():
+                        continue
+                    else:
+                        data.append(row)
+            for i in data:
+                label.append(i[1])
+                expense.append(int(i[2]))
+                revenue.append(int(i[3]))
+            labels=','.join(label)
+            posts= Post.query.filter_by(department='Marketing')
+            return render_template("marketing.html",posts=posts,labels=labels,rev=revenue,exp=expense,active_m='active')
+        elif file_m:
+            with open(os.path.join(app.config['UPLOAD_FOLDER'], file_m)) as file:
+                csvfile=csv.reader(file)
+                for row in csvfile:
+                    if row[1].isalpha():
+                        continue
+                    else:
+                        data.append(row)
+            for i in data:
+                label.append(i[1])
+                expense.append(int(i[2]))
+                revenue.append(int(i[3]))
+            labels=','.join(label)
+            return render_template("marketing.html",posts=posts,labels=labels,rev=revenue,exp=expense,active_m='active')
+        else:
+            return render_template('marketing.html', title='Marketing', posts=posts,active_m='active')
     else:
         return render_template('no_access_page.html',active_m='active')
 
@@ -136,42 +224,57 @@ def sales():
     expense=[]
     revenue=[]
     label=[]
-    if request.method=="POST":
-        f = request.files['csvfile']
-        if f.filename == '':
-            file_s=''
-            return redirect(url_for('sales'))
-        elif f:
-            filename = secure_filename(f.filename)
-            file_s= filename
-            f.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-        with open(os.path.join(app.config['UPLOAD_FOLDER'], filename)) as file:
-            csvfile=csv.reader(file)
-            k=''
-            for row in csvfile:
-                if find(row,k)==0:
-                    data.append(row)
-        for i in data:
-            label.append(i[1])
-            expense.append(int(i[2]))
-            revenue.append(int(i[3]))
-        labels=','.join(label)
-        return render_template("sales.html",posts=posts,labels=labels,rev=revenue,exp=expense,active_s='active')
-    if file_s:
-        with open(os.path.join(app.config['UPLOAD_FOLDER'], file_s)) as file:
-            csvfile=csv.reader(file)
-            k=''
-            for row in csvfile:
-                if find(row,k)==0:
-                    data.append(row)
-        for i in data:
-            label.append(i[1])
-            expense.append(int(i[2]))
-            revenue.append(int(i[3]))
-        labels=','.join(label)
-        return render_template("sales.html",posts=posts,labels=labels,rev=revenue,exp=expense,active_s='active')
     if page_access == 1 or page_access == 4:
-        return render_template('sales.html', title='Sales', posts=posts,active_s='active')
+        if request.method=="POST":
+            print("in post")
+            f = request.files['csvfile']
+            if f.filename == '':
+                return redirect(url_for('sales'))
+            elif f:
+                filename = secure_filename(f.filename)
+                file_s= filename
+                f.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+            clean(filename)
+            k=post_add(filename,'Sales')
+            if k==0:
+                flash('Post Already exist', 'warning')
+                return redirect(url_for('sales'))
+            elif k==-1:
+                flash('Add "Category" to Column names in the CSV file and Try again', 'danger')
+                return redirect(url_for('sales'))
+            else:
+                flash('Post added Sucessfully', 'success')
+                file_s = filename
+            with open(os.path.join(app.config['UPLOAD_FOLDER'], filename)) as file:
+                csvfile=csv.reader(file)
+                for row in csvfile:
+                    if row[1].isalpha():
+                        continue
+                    else:
+                        data.append(row)
+            for i in data:
+                label.append(i[1])
+                expense.append(int(i[2]))
+                revenue.append(int(i[3]))
+            labels=','.join(label)
+            posts= Post.query.filter_by(department='Sales')
+            return render_template("sales.html",posts=posts,labels=labels,rev=revenue,exp=expense,active_s='active')
+        elif file_s:
+            with open(os.path.join(app.config['UPLOAD_FOLDER'],file_s)) as file:
+                csvfile=csv.reader(file)
+                for row in csvfile:
+                    if row[1].isalpha():
+                        continue
+                    else:
+                        data.append(row)
+            for i in data:
+                label.append(i[1])
+                expense.append(int(i[2]))
+                revenue.append(int(i[3]))
+            labels=','.join(label)
+            return render_template("sales.html",posts=posts,labels=labels,rev=revenue,exp=expense,active_s='active')
+        else:
+            return render_template('sales.html', title='Sales', posts=posts,active_s='active')
     else:
         return render_template('no_access_page.html',active_s='active')
 
@@ -213,7 +316,6 @@ def login():
     global user
     global page_access
     global file_m,file_s,file_o
-    file_m=file_s=file_o=''
     if current_user.is_authenticated:
         return redirect(url_for('home'))
     form = LoginForm()
@@ -227,6 +329,7 @@ def login():
                 page_access = 2
             elif user.department == 'Marketing':
                 page_access = 3
+                print(page_access)
             elif user.department == 'Sales':
                 page_access = 4
             next_page = request.args.get('next')
@@ -304,11 +407,11 @@ def delete_post():
     if form.validate_on_submit():
         post = Post.query.filter_by(title=form.title.data).first()
         if post:
-            if post.author.username == current_user:
+            if post.author.username == current_user.username:
                 flash('Post deleted successfully', 'success')
                 db.session.delete(post)
                 db.session.commit()
-            elif post.department == departments:
+            elif departments == 'Admin':
                 flash('Post deleted successfully', 'success')
                 db.session.delete(post)
                 db.session.commit()
@@ -316,4 +419,5 @@ def delete_post():
                 flash('You Cannot Delete This Post', 'warning')
         else:
             flash('Post not found', 'warning')
+        
     return render_template('delete_post.html', form=form)
