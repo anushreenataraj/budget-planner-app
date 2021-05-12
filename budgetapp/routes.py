@@ -54,10 +54,9 @@ def post_add(filename,dep):
     df = pd.read_csv(os.path.join(app.config['UPLOAD_FOLDER'], filename))
     for i in df.columns:
         u.append(i)
-    print(u)
-
     if "Category" not in u:
-        return -1
+        if "category" not in u:
+            return -1
     for i in df.columns:
         if i.isnumeric() or i.upper() == "CATEGORY":
             continue
@@ -107,8 +106,13 @@ def operations():
             if f.filename == '':
                 return redirect(url_for('operations'))
             elif f:
-                filename = secure_filename(f.filename)
-                f.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+                p=f.filename.split(".")
+                if "csv" in p:
+                    filename = secure_filename(f.filename)
+                    f.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+                else:
+                    flash('Uploaded file is not in csv format', 'danger')
+                    return redirect(url_for('operations'))
             clean(filename)
             k=post_add(filename,'Operations')
             if k==0:
@@ -168,9 +172,13 @@ def marketing():
             if f.filename == '':
                 return redirect(url_for('marketing'))
             elif f:
-                filename = secure_filename(f.filename)
-                file_m= filename
-                f.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+                p=f.filename.split(".")
+                if "csv" in p:
+                    filename = secure_filename(f.filename)
+                    f.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+                else:
+                    flash('Uploaded file is not in csv format', 'danger')
+                    return redirect(url_for('marketing'))
             clean(filename)
             k=post_add(filename,'Marketing')
             if k==0:
@@ -231,9 +239,13 @@ def sales():
             if f.filename == '':
                 return redirect(url_for('sales'))
             elif f:
-                filename = secure_filename(f.filename)
-                file_s= filename
-                f.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+                p=f.filename.split(".")
+                if "csv" in p:
+                    filename = secure_filename(f.filename)
+                    f.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+                else:
+                    flash('Uploaded file is not in csv format', 'danger')
+                    return redirect(url_for('sales'))
             clean(filename)
             k=post_add(filename,'Sales')
             if k==0:
