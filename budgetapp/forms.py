@@ -1,7 +1,7 @@
 from flask_wtf import FlaskForm
 from flask_login import current_user
 from flask_wtf.file import FileField, FileAllowed
-from wtforms import StringField, PasswordField, SubmitField, BooleanField, SelectField, TextAreaField, FileField
+from wtforms import StringField, PasswordField, SubmitField, BooleanField, SelectField, TextAreaField, FileField,IntegerField
 from wtforms.validators import DataRequired, Length, EqualTo, Email, ValidationError
 from budgetapp.models import User, Post
 from flask_login import login_user, current_user, logout_user, login_required
@@ -10,10 +10,60 @@ class RegistrationForm(FlaskForm):
     username = StringField('Username', validators=[DataRequired(), Length(min=2, max=20)])
     email = StringField('Email', validators=[DataRequired(), Email()])
     department = SelectField('Department Name', choices=['--','Admin', 'Operations', 'Marketing', 'Sales'])
+    dep_num= SelectField('Inter Department', choices=['--','Dep-Admin','Operations-Dep:1', 'Operations-Dep:2', 'Operations-Dep:3','Marketing-Dep:1', 'Marketing-Dep:2', 'Marketing-Dep:3','Sales-Dep:1', 'Sales-Dep:2', 'Sales-Dep:3'])
     password = PasswordField('Password', validators=[DataRequired()])
     confirm_password = PasswordField('Confirm Password', validators=[DataRequired(), EqualTo('password')])
     submit = SubmitField('Create Account')
 
+    def validate_username(self, username):
+        user = User.query.filter_by(username=username.data).first()
+        if user:
+            raise ValidationError('The username is taken. Please choose a different one.')
+
+    def validate_email(self, email):
+        user = User.query.filter_by(email=email.data).first()
+        if user:
+            raise ValidationError('The email is taken. Please choose a different one.')
+
+class RegistrationForm_Ope(FlaskForm):
+    username = StringField('Username', validators=[DataRequired(), Length(min=2, max=20)])
+    email = StringField('Email', validators=[DataRequired(), Email()])
+    dep_num= SelectField('Inter Department', choices=['--','Dep-Admin','Operations-Dep:1', 'Operations-Dep:2', 'Operations-Dep:3'])
+    password = PasswordField('Password', validators=[DataRequired()])
+    confirm_password = PasswordField('Confirm Password', validators=[DataRequired(), EqualTo('password')])
+    submit = SubmitField('Create Account')
+    def validate_username(self, username):
+        user = User.query.filter_by(username=username.data).first()
+        if user:
+            raise ValidationError('The username is taken. Please choose a different one.')
+
+    def validate_email(self, email):
+        user = User.query.filter_by(email=email.data).first()
+        if user:
+            raise ValidationError('The email is taken. Please choose a different one.')
+class RegistrationForm_Mar(FlaskForm):
+    username = StringField('Username', validators=[DataRequired(), Length(min=2, max=20)])
+    email = StringField('Email', validators=[DataRequired(), Email()])
+    dep_num= SelectField('Inter Department', choices=['--','Dep-Admin','Marketing-Dep:1', 'Marketing-Dep:2', 'Marketing-Dep:3'])
+    password = PasswordField('Password', validators=[DataRequired()])
+    confirm_password = PasswordField('Confirm Password', validators=[DataRequired(), EqualTo('password')])
+    submit = SubmitField('Create Account')
+    def validate_username(self, username):
+        user = User.query.filter_by(username=username.data).first()
+        if user:
+            raise ValidationError('The username is taken. Please choose a different one.')
+
+    def validate_email(self, email):
+        user = User.query.filter_by(email=email.data).first()
+        if user:
+            raise ValidationError('The email is taken. Please choose a different one.')
+class RegistrationForm_Sal(FlaskForm):
+    username = StringField('Username', validators=[DataRequired(), Length(min=2, max=20)])
+    email = StringField('Email', validators=[DataRequired(), Email()])
+    dep_num= SelectField('Inter Department', choices=['--','Dep-Admin','Sales-Dep:1', 'Sales-Dep:2', 'Sales-Dep:3'])
+    password = PasswordField('Password', validators=[DataRequired()])
+    confirm_password = PasswordField('Confirm Password', validators=[DataRequired(), EqualTo('password')])
+    submit = SubmitField('Create Account')
     def validate_username(self, username):
         user = User.query.filter_by(username=username.data).first()
         if user:

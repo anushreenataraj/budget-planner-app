@@ -639,7 +639,7 @@ def sales_3():
         return render_template('no_access_page.html',active_s_3='active',h=h,s=s)
 
 def mail_sender(email,username,passw):
-    msg = Message('Login Credentials for Budget-Management App', sender='ksdrao7@gmail.com', recipients = [email])
+    msg = Message('Login Credentials for Budget-Management App', sender='ksdrao7@gmail.com', recipients = [email]) #add your email id at the sender
     msg.body = "Hello "+username+" ,Login Credentials for Budget-Management App:\n mail id: "+email+"\nPassword:"+passw
     mail.send(msg)
 @app.route("/register", methods = ["POST", "GET"])
