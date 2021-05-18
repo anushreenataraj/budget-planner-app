@@ -4,21 +4,46 @@
         <article class="media content-section">
           <div class="media-body">
             <div class="article-metadata">
-              <a class="mr-2" href="#">{{ post.author.username }}</a>
+              <a class="mr-2" href="#">{{ post.author.username.title() }}</a>
               <small class="text-muted">{{ post.date_posted.strftime('%Y-%m-%d') }}</small>
             </div>
             <h2><a class="article-title" style="font-family: 'IBM Plex Sans', sans-serif;">{{ post.title }}</a></h2>
             <p class="article-content" style="font-family: 'ABeeZee', sans-serif;">{{ post.content }}</p>
           </div>
         </article>
-    {% endfor %}
-        <form class="upload" action="operations" method="POST" enctype="multipart/form-data">
+        {% endfor %}
+        <form  class="upload" action="department-3" method="POST" enctype="multipart/form-data">
           <input  type="file" name="csvfile">
           <input type="submit" value="Upload">
           <p style="display:inline" >*Add the Column names before uploading the CSV</p>
         </form>
-        {% if exp %}
-    <div class="pie"><canvas id="myChart"></canvas></div>
+      {% if exp %}
+    <div class="out">
+    <div class="in"><h4>{{u[1]}}</h4><canvas class="pie" id="myChart_s_3"></canvas></div>
+    <div class="tab">
+        {% set l = labels.split(',') %}
+          <table class="tab_1">
+          {%for i in range(exp|length)%}
+            {%if u[i]=="Category"%}
+              <tr>
+                <th>{{u[i]}}</th>
+                <th>{{u[i+1]}}</th>
+              </tr>
+            {%elif u[i]=="category"%}
+              <tr>
+                <th>{{u[i]}}</th>
+                <th>{{u[i+1]}}</th>
+              </tr>
+            {%else%}
+              <tr>
+                <td>{{l[i]}}</td>
+                <td>{{exp[i]}}</td>
+              </tr>
+            {%endif%}
+          {%endfor%}
+          </table>
+        </div>
+    </div>
         <script>
           var j='{{labels}}'
           var lab= j.split(',')
@@ -61,12 +86,63 @@
             data: data,
           };
           var myChart = new Chart(
-            document.getElementById('myChart'),
+            document.getElementById('myChart_s_3'),
             config
           );
         </script>
-        <div class="bar" >
-        <canvas id="barchart"></canvas>
+
+        <div class="out">
+        <div class="in" ><h4>{{u[2]}}</h4><canvas class="pie" id="myChart1_s_3"></canvas></div>
+        <div class="tab">
+        {% set l = labels.split(',') %}
+          <table class="tab_1">
+          {%for i in range(exp|length)%}
+            {%if u[i]=="Category"%}
+              <tr>
+                <th>{{u[i]}}</th>
+                <th>{{u[i+2]}}</th>
+              </tr>
+            {%elif u[i]=="category"%}
+              <tr>
+                <th>{{u[i]}}</th>
+                <th>{{u[i+2]}}</th>
+              </tr>
+            {%else%}
+              <tr>
+                <td>{{l[i]}}</td>
+                 <td>{{rev[i]}}</td>
+              </tr>
+            {%endif%}
+          {%endfor%}
+          </table>
+        </div>
+        </div>
+        <script>
+        var myData_1={{rev}}
+          var COLORS_1 = interpolateColors(myData_1.length,colorRangeInfo);
+          const data_1 = {
+            labels: lab,
+            datasets: [{
+              label: 'My First Dataset',
+              data: {{rev}},
+              backgroundColor: COLORS_1,
+              hoverBackgroundColor: COLORS_1,
+              hoverOffset: 4
+            }]
+          };
+          const config_1 = {
+            type: 'pie',
+            data: data_1,
+          };
+          var myChart_1 = new Chart(
+            document.getElementById('myChart1_s_3'),
+            config_1
+          );
+        </script>
+      
+
+        <div class="bar">
+        <canvas id="barchart_s_3"></canvas>
         </div>
         <script>
           function clr(l,len){
@@ -106,7 +182,7 @@
               }
             }
           };
-          var myChart = new Chart(document.getElementById('barchart'),config1);
+          var myChart = new Chart(document.getElementById('barchart_s_3'),config1);
         </script>
     {% endif %}
     {% endblock content%}

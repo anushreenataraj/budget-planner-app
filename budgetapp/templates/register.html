@@ -32,6 +32,7 @@
                         {{ form.email(class="form-control form-control-lg") }}
                     {% endif %}
                 </div>
+                {% if page_access==1%}
                 <div class="form-group">
                     {{ form.department.label(class="form-control-label") }}
 
@@ -46,6 +47,22 @@
                         {{ form.department(class="form-control form-control-lg") }}
                     {% endif %}
                 </div>
+                {%endif%}
+                <div class="form-group">
+                    {{ form.dep_num.label(class="form-control-label") }}
+
+                    {% if form.dep_num.errors %}
+                        {{ form.dep_num(class="form-control form-control-lg is-invalid") }}
+                        <div class="invalid-feedback">
+                            {% for error in form.dep_num.errors %}
+                                <span>{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        {{ form.dep_num(class="form-control form-control-lg") }}
+                    {% endif %}
+                </div>
+               
                 <div class="form-group">
                     {{ form.password.label(class="form-control-label") }}
                     {% if form.password.errors %}

@@ -1,0 +1,187 @@
+{% extends 'layouts.html'%}
+    {% block content%}
+        {% for post in posts%}
+        <article class="media content-section">
+          <div class="media-body">
+            <div class="article-metadata">
+              <a class="mr-2" href="#">{{ post.author.username.title() }}</a>
+              <small class="text-muted">{{ post.date_posted.strftime('%Y-%m-%d') }}</small>
+            </div>
+            <h2><a class="article-title" style="font-family: 'IBM Plex Sans', sans-serif;">{{ post.title }}</a></h2>
+            <p class="article-content" style="font-family: 'ABeeZee', sans-serif;">{{ post.content }}</p>
+          </div>
+        </article>
+        {% endfor %}
+        <form  class="upload" action="department-1" method="POST" enctype="multipart/form-data">
+          <input  type="file" name="csvfile">
+          <input type="submit" value="Upload">
+          <p style="display:inline" >*Add the Column names before uploading the CSV</p>
+        </form>
+      {% if exp %}
+    <div class="out">
+    <div class="in"><h4>{{u[1]}}</h4><canvas class="pie" id="myChart_s_1"></canvas></div>
+    <div class="tab">
+        {% set l = labels.split(',') %}
+          <table class="tab_1">
+          {%for i in range(exp|length)%}
+            {%if u[i]=="Category"%}
+              <tr>
+                <th>{{u[i]}}</th>
+                <th>{{u[i+1]}}</th>
+              </tr>
+            {%elif u[i]=="category"%}
+              <tr>
+                <th>{{u[i]}}</th>
+                <th>{{u[i+1]}}</th>
+              </tr>
+            {%else%}
+              <tr>
+                <td>{{l[i]}}</td>
+                <td>{{exp[i]}}</td>
+              </tr>
+            {%endif%}
+          {%endfor%}
+          </table>
+        </div>
+    </div>
+        <script>
+          var j='{{labels}}'
+          var lab= j.split(',')
+          function calculatePoint(i, intervalSize, colorRangeInfo) {
+            var { colorStart, colorEnd, useEndAsStart } = colorRangeInfo;
+            return (useEndAsStart
+              ? (colorEnd - (i * intervalSize)): (colorStart + (i * intervalSize)));
+          }
+          function interpolateColors(dataLength,colorRangeInfo) {
+            var { colorStart, colorEnd } = colorRangeInfo;
+            var colorRange = colorEnd - colorStart;
+            var intervalSize = colorRange / dataLength;
+            var i, colorPoint;
+            var colorArray = [];
+            for (i = 0; i < dataLength; i++) {
+            colorPoint = calculatePoint(i, intervalSize, colorRangeInfo);
+            colorArray.push(d3.interpolateSpectral(colorPoint));
+            }
+            return colorArray;
+          }  
+          const colorRangeInfo = {
+            colorStart: 0,
+            colorEnd: 1,
+            useEndAsStart: false,
+          }
+          var myData={{exp}}
+          var COLORS = interpolateColors(myData.length,colorRangeInfo);
+          const data = {
+            labels: lab,
+            datasets: [{
+              label: 'My First Dataset',
+              data: {{exp}},
+              backgroundColor: COLORS,
+              hoverBackgroundColor: COLORS,
+              hoverOffset: 4
+            }]
+          };
+          const config = {
+            type: 'pie',
+            data: data,
+          };
+          var myChart = new Chart(
+            document.getElementById('myChart_s_1'),
+            config
+          );
+        </script>
+        <div class="out">
+        <div class="in" ><h4>{{u[2]}}</h4><canvas class="pie" id="myChart1_s_1"></canvas></div>
+        <div class="tab">
+        {% set l = labels.split(',') %}
+          <table class="tab_1">
+          {%for i in range(exp|length)%}
+            {%if u[i]=="Category"%}
+              <tr>
+                <th>{{u[i]}}</th>
+                <th>{{u[i+2]}}</th>
+              </tr>
+            {%elif u[i]=="category"%}
+              <tr>
+                <th>{{u[i]}}</th>
+                <th>{{u[i+2]}}</th>
+              </tr>
+            {%else%}
+              <tr>
+                <td>{{l[i]}}</td>
+                 <td>{{rev[i]}}</td>
+              </tr>
+            {%endif%}
+          {%endfor%}
+          </table>
+        </div>
+        </div>
+        <script>
+        var myData_1={{rev}}
+          var COLORS_1 = interpolateColors(myData_1.length,colorRangeInfo);
+          const data_1 = {
+            labels: lab,
+            datasets: [{
+              label: 'My First Dataset',
+              data: {{rev}},
+              backgroundColor: COLORS_1,
+              hoverBackgroundColor: COLORS_1,
+              hoverOffset: 4
+            }]
+          };
+          const config_1 = {
+            type: 'pie',
+            data: data_1,
+          };
+          var myChart_1 = new Chart(
+            document.getElementById('myChart1_s_1'),
+            config_1
+          );
+        </script>
+        
+
+        <div class="bar">
+        <canvas id="barchart_s_1"></canvas>
+        </div>
+        <script>
+          function clr(l,len){
+            var a=[];
+            for(var i=0;i<len;i++){
+              a.push(l)
+            }
+            return a
+          }
+          const data1 = {
+            labels: lab,
+            datasets: [{
+              label: 'Expenses',
+              data: {{exp}},
+              backgroundColor: clr('rgba(255, 99, 132, 0.2)',{{exp}}.length),
+              borderColor: clr('rgb(255, 99, 132)',{{exp}}.length),
+              borderWidth: 1
+            },{
+              label: 'Revenue',
+              data: {{rev}},
+              backgroundColor: clr('rgba(54, 162, 235, 0.2)',{{rev}}.length),
+              borderColor: clr('rgb(54, 162, 235)',{{rev}}.length),
+              borderWidth: 1
+            }]
+          };
+          const config1 = {
+            type: 'bar',
+            data: data1,
+            options: {
+              scales: {
+                x: {
+                  stacked: true
+                },
+                y: {
+                  stacked: true
+                }
+              }
+            }
+          };
+          var myChart = new Chart(document.getElementById('barchart_s_1'),config1);
+        </script>
+    {% endif %}
+    {% endblock content%}

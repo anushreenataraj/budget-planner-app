@@ -9,10 +9,11 @@
             <div class="content-section">
               <h4 style="font-family: 'ABeeZee', sans-serif;"><strong>Username: </strong>{{ user.username }}</h4>
                 <h4 style="font-family: 'ABeeZee', sans-serif;"><strong>Email: </strong>{{ user.email }}</h4>
-                <h4 style="font-family: 'ABeeZee', sans-serif;"><strong>Department/Type: </strong><span class="badge rounded-pill bg-warning text-dark">{{department }}</span></h4>
+                <h4 style="font-family: 'ABeeZee', sans-serif;"><strong>Department/Type: </strong><span class="badge rounded-pill bg-warning text-dark">{{department}}</span></h4>
+                <h4 style="font-family: 'ABeeZee', sans-serif;"><strong>Inter Department: </strong>{{ user.dep_num }}</h4>
             </div>
 </div>
-{% if page_access == 1 %}
+{% if page_access == 1 or user.dep_num == 'Dep-Admin' %}
     <div class="col-md-8">
                 <div class="content-section">
                     <h3 style="font-family: 'ABeeZee', sans-serif;">Manage Users</h3>

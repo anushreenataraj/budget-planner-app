@@ -36,11 +36,30 @@
             <div class="collapse navbar-collapse" id="navbarToggle">
               <div class="navbar-nav mr-auto">
                 {% if current_user.is_authenticated %}
-                    <a class="nav-item nav-link {{ active_d }}" href="{{ url_for('dashboard') }}">MY DASHBOARD</a>
+                  <a class="nav-item nav-link {{ active_d }}" href="{{ url_for('dashboard') }}">MY DASHBOARD</a>
+                  {% if h==1 %}
                     <a class="nav-item nav-link {{ active_h }}" href="{{ url_for('home') }}">HOME</a>
                     <a class="nav-item nav-link {{ active_o }}" href="{{ url_for('operations') }}">OPERATIONS</a>
                     <a class="nav-item nav-link {{ active_m }}" href="{{ url_for('marketing') }}">MARKETING</a>
                     <a class="nav-item nav-link {{ active_s }}" href="{{ url_for('sales') }}">SALES</a>
+                  {%elif h==0%}
+                    {%if o==1%}
+                        <a class="nav-item nav-link {{ active_h }}" href="{{ url_for('operations') }}">HOME</a>
+                        <a class="nav-item nav-link {{ active_o_1 }}" href="{{ url_for('operations_1') }}">Dep-1</a>
+                        <a class="nav-item nav-link {{ active_o_2 }}" href="{{ url_for('operations_2') }}">Dep-2</a>
+                        <a class="nav-item nav-link {{ active_o_3 }}" href="{{ url_for('operations_3') }}">Dep-3</a>
+                    {%elif m==1%}
+                      <a class="nav-item nav-link {{ active_h }}" href="{{ url_for('marketing') }}">HOME</a>
+                      <a class="nav-item nav-link {{ active_m_1 }}" href="{{ url_for('marketing_1') }}">Dep-1</a>
+                      <a class="nav-item nav-link {{ active_m_2 }}" href="{{ url_for('marketing_2') }}">Dep-2</a>
+                      <a class="nav-item nav-link {{ active_m_3 }}" href="{{ url_for('marketing_3') }}">Dep-3</a>
+                    {%elif s==1%}
+                      <a class="nav-item nav-link {{ active_h }}" href="{{ url_for('sales') }}">HOME</a>
+                      <a class="nav-item nav-link {{ active_s_1 }}" href="{{ url_for('sales_1') }}">Dep-1</a>
+                      <a class="nav-item nav-link {{ active_s_2 }}" href="{{ url_for('sales_2') }}">Dep-2</a>
+                      <a class="nav-item nav-link {{ active_s_3 }}" href="{{ url_for('sales_3') }}">Dep-3</a>
+                    {%endif%}
+                  {%endif%}
                 {% endif %}
               </div>
               <!-- Navbar Right Side -->
@@ -75,7 +94,8 @@
             </div>
             <div class="content-section">
               <h3 style="font-family: 'El Messiri', sans-serif;">About</h3>
-              <p class='text-muted'>This website helps you to manage and visualize monthly expenditure.</p>
+              <p class='text-muted'>This website helps you to manage and visualize monthly expenditure.
+              </p>
             </div>
           </div>
         </div>
