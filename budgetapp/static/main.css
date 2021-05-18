@@ -78,8 +78,32 @@ body {
   .account-heading {
     font-size: 2.5rem;
   }
+  .out{
+    position:relative; 
+    height:800px; 
+    width:1000px;
+  }
+  .in{
+    height:600px; 
+    width:700px; 
+    padding:5px;
+  }
+  .in h{
+    font-weight: bold;
+  }
+  .tab{
+    position:absolute; 
+    left:800px; 
+    top:120px; 
+    padding:8px; 
+    height:500px; 
+    width:400px;
+  }
+  .tab_1 td, .tab_1 th , .tab_1 tr{
+    padding:8px; 
+    border: 1px dashed black;
+  }
   .pie{
-    margin-top:50px;
     margin-bottom:50px;  
     padding:50px; 
     border-style:dashed; 
