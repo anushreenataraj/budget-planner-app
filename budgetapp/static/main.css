@@ -121,3 +121,60 @@ body {
   .upload{
     margin-bottom:50px;
   }
+  .badge-soft-success {
+    background-color: rgba(75,191,115,.175);
+    color: #4bbf73;
+}
+.badge-soft-danger {
+  background-color: rgba(217, 83, 79, 0.176);
+  color: rgb(217, 83, 79);
+}
+.me-2 {
+  margin-right: .5rem;
+}
+.mb-2 {
+  margin-bottom: .5rem;
+}
+.text-muted {
+  color: #737d85;
+}
+.align-items-start {
+  align-items: flex-start;
+}
+.d-flex {
+  display: flex;
+}
+.py-4 {
+  padding-top: 1.5rem;
+  padding-bottom: 1.5rem;
+}
+.card-body {
+  flex: 1 1 auto;
+  padding: 1.25rem;
+}
+.stat {
+  width: 48px;
+  height: 48px;
+  background: rgb(224, 234, 252);
+  border-radius: 50%;
+  padding: 0.75rem;
+}
+.row {
+  --bs-gutter-x: 24px;
+  --bs-gutter-y: 0;
+  display: flex;
+  flex-wrap: wrap;
+  margin-top: calc(var(--bs-gutter-y)*-1);
+  margin-right: calc(var(--bs-gutter-x)/-2);
+  margin-left: calc(var(--bs-gutter-x)/-2);
+}
+.ms-3 {
+  margin-left: 1rem;
+}
+
+.d-inline-block {
+  display: inline-block;
+}
+*, :after, :before {
+  box-sizing: border-box;
+}

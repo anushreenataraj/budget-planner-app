@@ -12,12 +12,88 @@
           </div>
         </article>
         {% endfor %}
-        <form  class="upload" action="department-1" method="POST" enctype="multipart/form-data">
-          <input  type="file" name="csvfile">
-          <input type="submit" value="Upload">
-          <p style="display:inline" >*Add the Column names before uploading the CSV</p>
+        <div class="content-section">
+        <form  method="POST" enctype="multipart/form-data">
+            <fieldset class="form-group mb-2">
+                <div class="form-group">
+                        {{ form.file(class="form-control form-control-lg") }}
+                </div>
+                 <div class="form-group">
+                    {{ form.type_of_file.label(class="form-control-label") }}
+                    {% if form.type_of_file.errors %}
+                        {{ form.type_of_file(class="form-control form-control-lg is-invalid") }}
+                        <div class="invalid-feedback">
+                            {% for error in form.type_of_file.errors %}
+                                <span>{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        {{ form.type_of_file(class="form-control form-control-lg") }}
+                    {% endif %}
+                </div>
+                <div class="form-group">
+                    {{ form.month.label(class="form-control-label") }}
+                    {% if form.month.errors %}
+                        {{ form.month(class="form-control form-control-lg is-invalid") }}
+                        <div class="invalid-feedback">
+                            {% for error in form.month.errors %}
+                                <span>{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        {{ form.month(class="form-control form-control-lg") }}
+                    {% endif %}
+                </div>
+                <div class="form-group">
+                    {{ form.year.label(class="form-control-label") }}
+                    {% if form.year.errors %}
+                        {{ form.year(class="form-control form-control-lg is-invalid") }}
+                        <div class="invalid-feedback">
+                            {% for error in form.year.errors %}
+                                <span>{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        {{ form.year(class="form-control form-control-lg") }}
+                    {% endif %}
+                </div>
+        </fieldset>
+            <div class="form-group">
+                {{ form.submit(class="btn btn-outline-info") }}
+            </div>
         </form>
-      {% if exp %}
+    </div>
+    {% if exp %}
+          {% if d%}
+          <div class="row">
+          {%for k in d%}
+          {%for i in d[k] %}
+						<div class="col-12 col-sm-6 col-xxl d-flex">
+							<div class="card flex-fill">
+								<div class="card-body py-4">
+									<div class="d-flex align-items-start">
+										<div class="flex-grow-1">
+                      <h class="mb-2">{{k}}</h>
+											<h3 class="mb-2">{{i[0]}}</h3>
+											<p class="mb-2">{{i[1]}}</p>
+											<div class="mb-0">
+												<span class="badge badge-soft-{{i[3]}} me-2"> <i class="mdi mdi-arrow-bottom-right"></i>{{i[2]}}</span>
+												<span class="text-muted">{{i[4]}}</span>
+											</div>
+										</div>
+										<div class="d-inline-block ms-3">
+											<div class="stat">
+												<svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="24" height="24" viewBox="0 0 226 226" style=" fill:#000000;"><g fill="none" fill-rule="nonzero" stroke="none" stroke-width="1" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="10" stroke-dasharray="" stroke-dashoffset="0" font-family="none" font-weight="none" font-size="none" text-anchor="none" style="mix-blend-mode: normal"><path d="M0,226v-226h226v226z" fill="none"></path><g fill="#df0e62"><path d="M135.487,47.08333h28.12758l5.88542,-18.83333h-107.11458l-5.88542,18.83333h37.66667c14.47342,0 26.63033,9.38842 31.06558,22.36458h-62.84683l-5.88542,18.83333h69.45733c-3.6725,14.19092 -16.45092,24.71875 -31.79067,24.71875h-37.66667v14.464l69.44792,70.286h24.71875v-2.35417l-65.91667,-65.91667c5.78183,0 12.64658,0 14.125,0c24.48333,0 44.66325,-17.83517 48.60883,-41.19792h16.13075l5.88542,-18.83333h-22.39283c-1.85508,-8.51267 -5.99842,-16.11192 -11.62017,-22.36458z"></path></g></g></svg>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+            {%endfor%}
+            {%endfor%}
+					</div>
+          {%endif%}
     <div class="out">
     <div class="in"><h4>{{u[1]}}</h4><canvas class="pie" id="myChart_s_1"></canvas></div>
     <div class="tab">
