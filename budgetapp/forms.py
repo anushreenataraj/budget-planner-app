@@ -2,6 +2,7 @@ from flask_wtf import FlaskForm
 from flask_login import current_user
 from flask_wtf.file import FileField, FileAllowed
 from wtforms import StringField, PasswordField, SubmitField, BooleanField, SelectField, TextAreaField, FileField,IntegerField
+from wtforms.fields.core import DateField
 from wtforms.validators import DataRequired, Length, EqualTo, Email, ValidationError
 from budgetapp.models import User, Post
 from flask_login import login_user, current_user, logout_user, login_required
@@ -14,7 +15,6 @@ class RegistrationForm(FlaskForm):
     password = PasswordField('Password', validators=[DataRequired()])
     confirm_password = PasswordField('Confirm Password', validators=[DataRequired(), EqualTo('password')])
     submit = SubmitField('Create Account')
-
     def validate_username(self, username):
         user = User.query.filter_by(username=username.data).first()
         if user:
@@ -31,7 +31,7 @@ class RegistrationForm_Ope(FlaskForm):
     dep_num= SelectField('Inter Department', choices=['--','Dep-Admin','Operations-Dep:1', 'Operations-Dep:2', 'Operations-Dep:3'])
     password = PasswordField('Password', validators=[DataRequired()])
     confirm_password = PasswordField('Confirm Password', validators=[DataRequired(), EqualTo('password')])
-    submit = SubmitField('Create Account')
+    submit = SubmitField('Create Account')  
     def validate_username(self, username):
         user = User.query.filter_by(username=username.data).first()
         if user:
@@ -41,13 +41,14 @@ class RegistrationForm_Ope(FlaskForm):
         user = User.query.filter_by(email=email.data).first()
         if user:
             raise ValidationError('The email is taken. Please choose a different one.')
+
 class RegistrationForm_Mar(FlaskForm):
     username = StringField('Username', validators=[DataRequired(), Length(min=2, max=20)])
     email = StringField('Email', validators=[DataRequired(), Email()])
     dep_num= SelectField('Inter Department', choices=['--','Dep-Admin','Marketing-Dep:1', 'Marketing-Dep:2', 'Marketing-Dep:3'])
     password = PasswordField('Password', validators=[DataRequired()])
     confirm_password = PasswordField('Confirm Password', validators=[DataRequired(), EqualTo('password')])
-    submit = SubmitField('Create Account')
+    submit = SubmitField('Create Account')  
     def validate_username(self, username):
         user = User.query.filter_by(username=username.data).first()
         if user:
@@ -57,6 +58,7 @@ class RegistrationForm_Mar(FlaskForm):
         user = User.query.filter_by(email=email.data).first()
         if user:
             raise ValidationError('The email is taken. Please choose a different one.')
+
 class RegistrationForm_Sal(FlaskForm):
     username = StringField('Username', validators=[DataRequired(), Length(min=2, max=20)])
     email = StringField('Email', validators=[DataRequired(), Email()])
@@ -64,6 +66,7 @@ class RegistrationForm_Sal(FlaskForm):
     password = PasswordField('Password', validators=[DataRequired()])
     confirm_password = PasswordField('Confirm Password', validators=[DataRequired(), EqualTo('password')])
     submit = SubmitField('Create Account')
+
     def validate_username(self, username):
         user = User.query.filter_by(username=username.data).first()
         if user:
@@ -73,7 +76,6 @@ class RegistrationForm_Sal(FlaskForm):
         user = User.query.filter_by(email=email.data).first()
         if user:
             raise ValidationError('The email is taken. Please choose a different one.')
-
 class LoginForm(FlaskForm):
     email = StringField('Email', validators=[DataRequired(), Email()])
     password = PasswordField('Password', validators=[DataRequired()])
@@ -119,3 +121,36 @@ class PostForm(FlaskForm):
 class DeletePostForm(FlaskForm):
     title = StringField('Title', validators=[DataRequired()])
     submit = SubmitField('Delete')
+class UploadForm(FlaskForm):
+    file = FileField()
+    type_of_file= SelectField('Type of File', choices=['Expected','Actual'])
+    month = DateField('Month',format="%m")
+    year = DateField('Year',format="%Y")
+    submit = SubmitField('Upload')
+
+class DeleteDataForm(FlaskForm):
+    department = SelectField('Department Name',choices=['--','Operations', 'Marketing', 'Sales'], validators=[DataRequired()])
+    dep_num = SelectField('Inter Department Name',choices=['--','Dep-Admin','Operations-Dep:1', 'Operations-Dep:2', 'Operations-Dep:3','Marketing-Dep:1', 'Marketing-Dep:2', 'Marketing-Dep:3','Sales-Dep:1', 'Sales-Dep:2', 'Sales-Dep:3'],validators=[DataRequired()])
+    type_of_file= SelectField('Type of File', choices=['Expected','Actual'])
+    month = DateField('Month',format="%m", validators=[DataRequired()])
+    year = DateField('Year',format="%Y", validators=[DataRequired()])
+    submit = SubmitField('Delete')
+class DeleteDataForm_Ope(FlaskForm):
+    dep_num = SelectField('Inter Department Name',choices=['--','Dep-Admin','Operations-Dep:1', 'Operations-Dep:2', 'Operations-Dep:3'],validators=[DataRequired()])
+    type_of_file= SelectField('Type of File', choices=['Expected','Actual'])
+    month = DateField('Month',format="%m", validators=[DataRequired()])
+    year = DateField('Year',format="%Y", validators=[DataRequired()])
+    submit = SubmitField('Delete')
+class DeleteDataForm_Mar(FlaskForm):
+    dep_num = SelectField('Inter Department Name',choices=['--','Dep-Admin','Marketing-Dep:1', 'Marketing-Dep:2', 'Marketing-Dep:3'],validators=[DataRequired()])
+    type_of_file= SelectField('Type of File', choices=['Expected','Actual'])
+    month = DateField('Month',format="%m", validators=[DataRequired()])
+    year = DateField('Year',format="%Y", validators=[DataRequired()])
+    submit = SubmitField('Delete')
+class DeleteDataForm_Sal(FlaskForm):
+    dep_num = SelectField('Inter Department Name',choices=['--','Dep-Admin','Sales-Dep:1', 'Sales-Dep:2', 'Sales-Dep:3'],validators=[DataRequired()])
+    type_of_file= SelectField('Type of File', choices=['Expected','Actual'])
+    month = DateField('Month',format="%m", validators=[DataRequired()])
+    year = DateField('Year',format="%Y", validators=[DataRequired()])
+    submit = SubmitField('Delete')
+

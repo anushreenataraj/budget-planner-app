@@ -26,6 +26,25 @@ class Post(db.Model):
     dep_num= db.Column(db.String(12), nullable=False) #Sub-department
     content = db.Column(db.Text, nullable=False)
     user_id = db.Column(db.Text, db.ForeignKey('user.id'), nullable=False)
-
     def __repr__(self):
         return f"Post('{self.title}', '{self.date_posted}', {self.department})"
+
+class Data_month(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    department = db.Column(db.Text, nullable=False)
+    dep_num= db.Column(db.String(12), nullable=False) #Sub-department
+    month = db.Column(db.Text, nullable=False)
+    year =  db.Column(db.Text, nullable=False)
+    content = db.Column(db.Text, nullable=False)
+    mode = db.Column(db.Text, nullable=False)
+    def __repr__(self):
+        return f"Data_month('{self.department}', '{self.content}', '{self.mode}')"
+class Data_year(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    department = db.Column(db.Text, nullable=False)
+    dep_num= db.Column(db.String(12), nullable=False) #Sub-department
+    count= db.Column(db.Integer, nullable=False)
+    year =  db.Column(db.Text, nullable=False)
+    content = db.Column(db.Text, nullable=False)
+    def __repr__(self):
+        return f"Data_year('{self.department}', '{self.content}')"
