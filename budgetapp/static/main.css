@@ -16,11 +16,13 @@ body {
 
   .bg-steel {
     background-color: #D44C5B;
-    border-style: solid;
-    border-color: black;
   }
 
-
+  .alert-warning{
+    color:#b6a306;
+    background-color: #ffffb0;
+    border-color: #f3f325;
+  }
   .site-header .navbar-nav .nav-link {
     font-family: 'Bree Serif', serif;
     color: white;
@@ -118,6 +120,15 @@ body {
     border-style:dashed; 
     border-radius:20px;
   }
+  .line{
+    margin-top:100px; 
+    margin-bottom:150px; 
+    padding :20px; 
+    height:550px; 
+    width: 1000px;
+    border-style:dashed;
+    border-radius:20px;
+  }
   .upload{
     margin-bottom:50px;
   }
@@ -141,16 +152,17 @@ body {
 .align-items-start {
   align-items: flex-start;
 }
+
 .d-flex {
   display: flex;
 }
 .py-4 {
-  padding-top: 1.5rem;
-  padding-bottom: 1.5rem;
+  padding-top: 0.75rem;
+  padding-bottom: 0.75rem;
 }
 .card-body {
   flex: 1 1 auto;
-  padding: 1.25rem;
+  padding: 0.75rem;
 }
 .stat {
   width: 48px;
