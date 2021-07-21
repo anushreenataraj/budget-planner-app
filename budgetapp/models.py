@@ -20,14 +20,16 @@ class User(db.Model, UserMixin):
 
 class Post(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    title = db.Column(db.String(100), nullable=False)
-    date_posted = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
+    month = db.Column(db.Text, nullable=False)
+    year =  db.Column(db.Text, nullable=False)
+    mode = db.Column(db.Text, nullable=False)
     department = db.Column(db.Text, nullable=False)
     dep_num= db.Column(db.String(12), nullable=False) #Sub-department
     content = db.Column(db.Text, nullable=False)
+    data= db.Column(db.Text, nullable=False)
     user_id = db.Column(db.Text, db.ForeignKey('user.id'), nullable=False)
     def __repr__(self):
-        return f"Post('{self.title}', '{self.date_posted}', {self.department})"
+        return f"Post('{self.month}', '{self.year}', '{self.mode}', {self.department})"
 
 class Data_month(db.Model):
     id = db.Column(db.Integer, primary_key=True)

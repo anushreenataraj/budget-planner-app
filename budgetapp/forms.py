@@ -113,18 +113,10 @@ class CheckAccountForm(FlaskForm):
     email = StringField('Email', validators=[DataRequired(), Email()])
     submit = SubmitField('Check')
 
-class PostForm(FlaskForm):
-    title = StringField('Title', validators=[DataRequired()])
-    content = TextAreaField('Content', validators=[DataRequired()])
-    submit = SubmitField('Post')
-
-class DeletePostForm(FlaskForm):
-    title = StringField('Title', validators=[DataRequired()])
-    submit = SubmitField('Delete')
 class UploadForm(FlaskForm):
     file = FileField()
     type_of_file= SelectField('Type of File', choices=['Expected','Actual'])
-    month = DateField('Month',format="%m")
+    month = SelectField('Month',choices=['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],validators=[DataRequired()])
     year = DateField('Year',format="%Y")
     submit = SubmitField('Upload')
 
@@ -132,25 +124,34 @@ class DeleteDataForm(FlaskForm):
     department = SelectField('Department Name',choices=['--','Operations', 'Marketing', 'Sales'], validators=[DataRequired()])
     dep_num = SelectField('Inter Department Name',choices=['--','Dep-Admin','Operations-Dep:1', 'Operations-Dep:2', 'Operations-Dep:3','Marketing-Dep:1', 'Marketing-Dep:2', 'Marketing-Dep:3','Sales-Dep:1', 'Sales-Dep:2', 'Sales-Dep:3'],validators=[DataRequired()])
     type_of_file= SelectField('Type of File', choices=['Expected','Actual'])
-    month = DateField('Month',format="%m", validators=[DataRequired()])
+    month = SelectField('Month',choices=['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],validators=[DataRequired()])
     year = DateField('Year',format="%Y", validators=[DataRequired()])
     submit = SubmitField('Delete')
 class DeleteDataForm_Ope(FlaskForm):
     dep_num = SelectField('Inter Department Name',choices=['--','Dep-Admin','Operations-Dep:1', 'Operations-Dep:2', 'Operations-Dep:3'],validators=[DataRequired()])
     type_of_file= SelectField('Type of File', choices=['Expected','Actual'])
-    month = DateField('Month',format="%m", validators=[DataRequired()])
+    month = SelectField('Month',choices=['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],validators=[DataRequired()])
     year = DateField('Year',format="%Y", validators=[DataRequired()])
     submit = SubmitField('Delete')
 class DeleteDataForm_Mar(FlaskForm):
     dep_num = SelectField('Inter Department Name',choices=['--','Dep-Admin','Marketing-Dep:1', 'Marketing-Dep:2', 'Marketing-Dep:3'],validators=[DataRequired()])
     type_of_file= SelectField('Type of File', choices=['Expected','Actual'])
-    month = DateField('Month',format="%m", validators=[DataRequired()])
+    month = SelectField('Month',choices=['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],validators=[DataRequired()])
     year = DateField('Year',format="%Y", validators=[DataRequired()])
     submit = SubmitField('Delete')
 class DeleteDataForm_Sal(FlaskForm):
     dep_num = SelectField('Inter Department Name',choices=['--','Dep-Admin','Sales-Dep:1', 'Sales-Dep:2', 'Sales-Dep:3'],validators=[DataRequired()])
     type_of_file= SelectField('Type of File', choices=['Expected','Actual'])
-    month = DateField('Month',format="%m", validators=[DataRequired()])
+    month = SelectField('Month',choices=['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],validators=[DataRequired()])
     year = DateField('Year',format="%Y", validators=[DataRequired()])
     submit = SubmitField('Delete')
 
+class MonthDataForm(FlaskForm):
+    type_of_file= SelectField('Type of File', choices=['Expected','Actual'],validators=[DataRequired()])
+    mode= SelectField('Mode', choices=['Monthly','Quarterly','Half-yearly','Annually'])
+    month = SelectField('Month',choices=['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],validators=[DataRequired()])
+    year = DateField('Year',format="%Y")
+    submit1 = SubmitField('Submit')
+class SalaryForm(FlaskForm):
+    file = FileField()
+    submit = SubmitField('Submit')
