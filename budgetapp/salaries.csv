@@ -1,0 +1,21 @@
+NAME,DEPARTMENT,INTER DEPARTMENT,SALARY
+Alan,Operations,Operations-Department:1,15000
+Ram ,Sales,Sales-Department:3,10000
+Deepak,Operations,Operations-Department:2,16000
+Lasya,Marketing,Marketing-Department:2,21000
+Harsh,Sales,Sales-Department:1,11000
+Vivek,Operations,Operations-Department:3,17000
+Geetha,Marketing,Marketing-Department:1,20000
+Sruthi,Sales,Sales-Department:2,12000
+Anand,Marketing,Marketing-Department:3,22000
+Karthik,Sales,Sales-Department:3,10000
+Sita,Operations,Operations-Department:1,10000
+Farah,Marketing,Marketing-Department:2,21000
+Rohan,Sales,Sales-Department:1,11000
+Priya,Operations,Operations-Department:2,16000
+Anitha,Marketing,Marketing-Department:1,20000
+Naveen,Sales,Sales-Department:2,12000
+Esha,Operations,Operations-Department:3,17000
+Neha,Marketing,Marketing-Department:3,22000
+Keerthi,Sales,Sales-Department:3,10000
+Akhil,Operations,Operations-Department:1,15000
