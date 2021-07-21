@@ -1,0 +1,51 @@
+{% extends 'layouts.html'%}
+{% block content%}
+     <div class="content-section">
+        <form  method="POST" enctype="multipart/form-data">
+            {{ form.hidden_tag() }}
+            <fieldset class="form-group mb-2">
+              <h5 >Add File</h5>
+                <div class="form-group">
+                        {{ form.file(class="form-control form-control-lg") }}
+                </div>
+            <h6>*the file should include Name,Department,Inter-Department,Salary</h6>
+            </fieldset>
+            <div class="form-group">
+                {{ form.submit(class="btn btn-outline-info") }}
+            </div>
+        </form>
+    </div>
+    {%if sal%}
+        <div style="margin-top:50px;margin-bottom:50px;">
+          <table class="table">
+          {%for i in range(sal|length)%}
+            {%if sal[i][0]=="Name"%}
+              <tr>
+                <th scope="col">S.No</th>
+                <th scope="col">{{sal[i][0]}}</th>
+                <th scope="col">{{sal[i][1]}}</th>
+                <th scope="col">{{sal[i][2]}}</th>
+                <th scope="col">{{sal[i][3]}}</th>
+              </tr>
+            {%elif sal[i][0]=="NAME"%}
+              <tr>
+                <th scope="col">S.No</th>
+                <th scope="col">{{sal[i][0]}}</th>
+                <th scope="col">{{sal[i][1]}}</th>
+                <th scope="col">{{sal[i][2]}}</th>
+                <th scope="col">{{sal[i][3]}}</th>
+              </tr>
+            {%else%}
+              <tr>
+                <td scope="row">{{sal[i][0]}}</td>
+                <td>{{sal[i][1]}}</td>
+                <td>{{sal[i][2]}}</td>
+                <td>{{sal[i][3]}}</td>
+                <td>{{sal[i][4]}}</td>
+              </tr>
+            {%endif%}
+          {%endfor%}
+          </table>
+        </div>
+    {%endif%}
+{% endblock content%}

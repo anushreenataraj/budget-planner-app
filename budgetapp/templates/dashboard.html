@@ -28,22 +28,11 @@
 
 <div class="col-md-8">
                 <div class="content-section">
-                    <h4 style="font-family: 'ABeeZee', sans-serif;"><strong>Posts</strong></h4>
+                    <h4 style="font-family: 'ABeeZee', sans-serif;"><strong>Data</strong></h4>
                     <div class="btn-group" role="group" aria-label="Basic example">
-                <a type="button" class="btn btn-outline-warning" href="{{ url_for('create_new_post') }}"><i class="fi-br-folder-add"></i></a>
                 <a type="button" class="btn btn-outline-danger" href="{{ url_for('delete_post') }}"><i class="fi-br-trash"></i></a>
             </div>
                     </div>
                 </div>
-{% if page_access == 1 or user.dep_num == 'Dep-Admin' %}
-<div class="col-md-8">
-                <div class="content-section">
-                    <h4 style="font-family: 'ABeeZee', sans-serif;"><strong>Data</strong></h4>
-                    <div class="btn-group" role="group" aria-label="Basic example">
-                <a type="button" class="btn btn-outline-danger" href="{{ url_for('delete_data') }}"><i class="fi-br-trash"></i></a>
-            </div>
-                    </div>
-                </div>
 </body>
-{%endif%}
 {% endblock content %}

@@ -1,23 +1,34 @@
 {% extends 'layouts.html'%}
     {% block content%}
-    {% for d in dep%}
-      {% if dep[d] %}
-        <h4>{{d}}</h4>
-      {% endif %}
-      {% for post in dep[d] %}
-        <article class="media content-section">
-          <div class="media-body">
-            <div class="article-metadata">
-              <a class="mr-2" href="#">{{ post.author.username }}<span class="badge rounded-pill bg-warning text-dark">{{department }}</span></a>
-              <small class="text-muted">{{ post.date_posted.strftime('%d-%m-%Y') }}</small>
-            </div>
-            <h2><a class="article-title" style="font-family: 'IBM Plex Sans', sans-serif;">{{ post.title }}</a></h2>
-            <p class="article-content" style="font-family: 'ABeeZee', sans-serif;">{{ post.content }}</p>
-          </div>
-        </article>
-        {% endfor %} 
-        <h1 class="gap" style="margin-bottom:50px;"> </h1>
-    {% endfor %}
+    {%if page_access==1%}
+      {%if dep%}
+        {%for p in dep%}
+          <h3 style="font-weight:bold;margin-top:50px;">{{p}}</h3>
+          {% set k = dep[p] %}
+          {%for i in k%}
+            <h4>{{i}}</h4>
+            <section id="minimal-statistics">
+              <div class="row">
+                {%for j in k[i] %}
+                  <div class="col-xl-3 col-sm-6 col-12"> 
+                    <div class="card" style="width:220px;">
+                      <div class="card-content" >
+                        <div class="card-body" >
+                          <div class="media d-flex" >
+                            <div class="align-self-center" ><i class="icon-{{j[2]}}  primary font-large-2 float-left"></i></div>
+                            <div class="media-body text-right" ><h3 style="font-weight:bold;">{{j[1]}}</h3><span>{{j[0]}}</span></div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                {%endfor%}
+              </div>
+            </section>
+          {%endfor%}
+        {%endfor%}
+      {%endif%}
+    {%endif%}
     {%if h==0 %}
     <form class="upload" action="return" method="POST" >
           <input type="submit" value="Go Back">

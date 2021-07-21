@@ -1,20 +1,10 @@
 {% extends 'layouts.html'%}
-    {% block content%}
-        {% for post in posts%}
-        <article class="media content-section">
-          <div class="media-body">
-            <div class="article-metadata">
-              <a class="mr-2" href="#">{{ post.author.username }}</a>
-              <small class="text-muted">{{ post.date_posted.strftime('%Y-%m-%d') }}</small>
-            </div>
-            <h2><a class="article-title" style="font-family: 'IBM Plex Sans', sans-serif;">{{ post.title }}</a></h2>
-            <p class="article-content" style="font-family: 'ABeeZee', sans-serif;">{{ post.content }}</p>
-          </div>
-        </article>
-    {% endfor %}
-        <div class="content-section">
+{% block content_1%}
+     <div class="content-section">
         <form  method="POST" enctype="multipart/form-data">
+            {{ form.hidden_tag() }}
             <fieldset class="form-group mb-2">
+              <h5 >Add File</h5>
                 <div class="form-group">
                         {{ form.file(class="form-control form-control-lg") }}
                 </div>
@@ -63,14 +53,103 @@
             </div>
         </form>
     </div>
+  {% endblock content_1%} 
+  {% block content%}
+  <div class="content-section">
+        <form  method="POST" enctype="multipart/form-data">
+        {{ form.hidden_tag() }}
+            <fieldset class="form-group mb-2">
+                <div class="form-group">
+                    {{ form.type_of_file.label(class="form-control-label") }}
+                    {% if form.type_of_file.errors %}
+                        {{ form.type_of_file(class="form-control form-control-lg is-invalid") }}
+                        <div class="invalid-feedback">
+                            {% for error in form.type_of_file.errors %}
+                                <span>{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        {{ form.type_of_file(class="form-control form-control-lg") }}
+                    {% endif %}
+                </div>
+                <div class="form-group">
+                    {{ form_1.mode.label(class="form-control-label") }}
+                    {% if form_1.mode.errors %}
+                        {{ form_1.mode(class="form-control form-control-lg is-invalid") }}
+                        <div class="invalid-feedback">
+                            {% for error in form_1.mode.errors %}
+                                <span>{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        {{ form_1.mode(class="form-control form-control-lg") }}
+                    {% endif %}
+                </div>
+                <div class="form-group">
+                    {{ form_1.month.label(class="form-control-label") }}
+                    {% if form_1.month.errors %}
+                        {{ form_1.month(class="form-control form-control-lg is-invalid") }}
+                        <div class="invalid-feedback">
+                            {% for error in form_1.month.errors %}
+                                <span>{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        {{ form_1.month(class="form-control form-control-lg") }}
+                    {% endif %}
+                </div>
+                <div class="form-group">
+                    {{ form_1.year.label(class="form-control-label") }}
+                    {% if form_1.year.errors %}
+                        {{ form_1.year(class="form-control form-control-lg is-invalid") }}
+                        <div class="invalid-feedback">
+                            {% for error in form_1.year.errors %}
+                                <span>{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        {{ form_1.year(class="form-control form-control-lg") }}
+                    {% endif %}
+                </div>
+                </fieldset>
+            <div class="form-group">
+                {{ form_1.submit1(class="btn btn-outline-info") }}
+            </div>
+        </form>
+    </div>
     {% if exp %}
+        {%if k%}
+        <h3 style="text-Align:Center;font-weight:bold;margin-top:50px;">Data Insights</h3>
+        {%for i in k%}
+        <h5>{{i}}</h5>
+            <section id="minimal-statistics">
+              <div class="row">
+                {%for j in k[i] %}
+                  <div class="col-xl-3 col-sm-6 col-12"> 
+                    <div class="card">
+                      <div class="card-content">
+                        <div class="card-body">
+                          <div class="media d-flex" >
+                            <div class="align-self-center" ><i class="icon-{{j[2]}}  primary font-large-2 float-left"></i></div>
+                            <div class="media-body text-right" ><h3>{{j[1]}}</h3><span>{{j[0]}}</span></div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                {%endfor%}
+              </div>
+            </section>
+        {%endfor%}
+      {%endif%}
+      <h3 style="text-Align:Center;font-weight:bold;margin-top:50px;">Comparision Analysis</h3>
           {% if d%}
-          <div class="row">
           {%for k in d%}
-          {%for i in d[k] %}
+          <div class="row">
+            {%for i in d[k] %}
 						<div class="col-12 col-sm-6 col-xxl d-flex">
 							<div class="card flex-fill">
-								<div class="card-body py-4">
+								<div class="card-body">
 									<div class="d-flex align-items-start">
 										<div class="flex-grow-1">
                       <h class="mb-2">{{k}}</h>
@@ -91,9 +170,10 @@
 							</div>
 						</div>
             {%endfor%}
-            {%endfor%}
 					</div>
+          {%endfor%}
           {%endif%}
+    <h3 style="text-Align:Center;font-weight:bold;margin-top:50px;">Visualization</h3>
     <div class="out">
     <div class="in"><h4>{{u[1]}}</h4><canvas class="pie" id="myChart_o_3"></canvas></div>
     <div class="tab">
@@ -217,7 +297,7 @@
           );
         </script>
        
-
+        <h4>Expenses vs Revenue</h4>
         <div class="bar" >
         <canvas id="barchart_o_3"></canvas>
         </div>
@@ -262,4 +342,52 @@
           var myChart = new Chart(document.getElementById('barchart_o_3'),config1);
         </script>
     {% endif %}
-    {% endblock content%}
+    {%if expense%}
+    <h3 style="text-Align:Center;font-weight:bold;margin-top:50px;">Visualization</h3>
+<div class="line"><h5>Periodic Analysis</h5><canvas id="lineChart_o_3"></canvas></div>
+<script>
+var j='{{labels}}'
+var lab= j.split(',')
+function clr(l,len){
+    var a=[];
+    for(var i=0;i<len;i++){
+        a.push(l)
+    }
+    return a
+}
+const data = {
+  labels: lab,
+  datasets: [
+    {
+      label: 'Total Expenses',
+      data: {{expense}},
+      borderColor: clr('rgba(255, 99, 132, 0.2)',{{expense}}.length),
+      backgroundColor: clr('rgb(255, 99, 132)',{{expense}}.length)
+    },
+    {
+      label: 'Total Revenue',
+      data: {{revenue}},
+      borderColor: clr('rgba(54, 162, 235, 0.2)',{{revenue}}.length),
+      backgroundColor: clr('rgb(54, 162, 235)',{{revenue}}.length)
+    }
+  ]
+};
+const config = {
+  type: 'line',
+  data: data,
+  options: {
+    responsive: true,
+    plugins: {
+      legend: {
+        position: 'top',
+      }
+    }
+  },
+};
+var myChart_1 = new Chart(
+    document.getElementById('lineChart_o_3'),
+    config
+);
+</script>
+{%endif%}
+{% endblock content%} 

@@ -1,0 +1,130 @@
+{% extends "layouts.html" %}
+{% block content %}
+<head>
+    <meta charset="UTF-8">
+    <title>Data</title>
+</head>
+<body>
+<div class="content-section">
+        <form  method="POST" enctype="multipart/form-data">
+            <fieldset class="form-group mb-2">
+                 <div class="form-group">
+                    {{ form.dep_num.label(class="form-control-label") }}
+                    {% if form.dep_num.errors %}
+                        {{ form.dep_num(class="form-control form-control-lg is-invalid") }}
+                        <div class="invalid-feedback">
+                            {% for error in form.dep_num.errors %}
+                                <span>{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        {{ form.dep_num(class="form-control form-control-lg") }}
+                    {% endif %}
+                </div>
+                <div class="form-group">
+                    {{ form.month.label(class="form-control-label") }}
+                    {% if form.month.errors %}
+                        {{ form.month(class="form-control form-control-lg is-invalid") }}
+                        <div class="invalid-feedback">
+                            {% for error in form.month.errors %}
+                                <span>{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        {{ form.month(class="form-control form-control-lg") }}
+                    {% endif %}
+                </div>
+                <div class="form-group">
+                    {{ form.year.label(class="form-control-label") }}
+                    {% if form.year.errors %}
+                        {{ form.year(class="form-control form-control-lg is-invalid") }}
+                        <div class="invalid-feedback">
+                            {% for error in form.year.errors %}
+                                <span>{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        {{ form.year(class="form-control form-control-lg") }}
+                    {% endif %}
+                </div>
+                <div class="form-group">
+                    {{ form.month_to.label(class="form-control-label") }}
+                    {% if form.month_to.errors %}
+                        {{ form.month_to(class="form-control form-control-lg is-invalid") }}
+                        <div class="invalid-feedback">
+                            {% for error in form.month_to.errors %}
+                                <span>{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        {{ form.month_to(class="form-control form-control-lg") }}
+                    {% endif %}
+                </div>
+                <div class="form-group">
+                    {{ form.year_to.label(class="form-control-label") }}
+                    {% if form.year_to.errors %}
+                        {{ form.year_to(class="form-control form-control-lg is-invalid") }}
+                        <div class="invalid-feedback">
+                            {% for error in form.year_to.errors %}
+                                <span>{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        {{ form.year_to(class="form-control form-control-lg") }}
+                    {% endif %}
+                </div>
+        </fieldset>
+            <div class="form-group">
+                {{ form.submit(class="btn btn-outline-info") }}
+            </div>
+        </form>
+    </div>
+{%if exp%}
+<div class="line"><h3>Periodic Analysis</h3><canvas id="lineChart"></canvas></div>
+<script>
+var j='{{labels}}'
+var lab= j.split(',')
+function clr(l,len){
+    var a=[];
+    for(var i=0;i<len;i++){
+        a.push(l)
+    }
+    return a
+}
+const data = {
+  labels: lab,
+  datasets: [
+    {
+      label: 'Total Expenses',
+      data: {{exp}},
+      borderColor: clr('rgba(255, 99, 132, 0.2)',{{exp}}.length),
+      backgroundColor: clr('rgb(255, 99, 132)',{{exp}}.length)
+    },
+    {
+      label: 'Total Revenue',
+      data: {{rev}},
+      borderColor: clr('rgba(54, 162, 235, 0.2)',{{rev}}.length),
+      backgroundColor: clr('rgb(54, 162, 235)',{{rev}}.length)
+    }
+  ]
+};
+const config = {
+  type: 'line',
+  data: data,
+  options: {
+    responsive: true,
+    plugins: {
+      legend: {
+        position: 'top',
+      }
+    }
+  },
+};
+var myChart_1 = new Chart(
+    document.getElementById('lineChart'),
+    config
+);
+</script>
+{%endif%}
+</body>
+{% endblock content %}
